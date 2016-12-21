@@ -8,7 +8,7 @@ class MattermostListener < Redmine::Hook::Listener
 		url = url_for_project issue.project
 
 		return unless channels.any? and url
-		return if issue.is_private?
+		return if issue.is_private? and Setting.plugin_redmine_mattermost[:post_private_issues] != '1'
 
 		msg = "[#{escape issue.project}] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description}"
 
@@ -45,8 +45,8 @@ class MattermostListener < Redmine::Hook::Listener
 		url = url_for_project issue.project
 
 		return unless channels.any? and url and Setting.plugin_redmine_mattermost[:post_updates] == '1'
-		return if issue.is_private?
-		return if journal.private_notes?
+		return if issue.is_private?	and Setting.plugin_redmine_mattermost[:post_private_issues] != '1'
+		return if journal.private_notes? and Setting.plugin_redmine_mattermost[:post_private_notes] != '1'
 
 		msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes}"
 
@@ -66,7 +66,7 @@ class MattermostListener < Redmine::Hook::Listener
 		url = url_for_project issue.project
 
 		return unless channels.any? and url and issue.save
-		return if issue.is_private?
+		return if issue.is_private? and Setting.plugin_redmine_mattermost[:post_private_issues] != '1'
 
 		msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>"
 
