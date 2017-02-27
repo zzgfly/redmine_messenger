@@ -6,9 +6,9 @@ class MattermostListener < Redmine::Hook::Listener
 
 		channels = channels_for_project issue.project
 		url = url_for_project issue.project
-    post_private_issues = post_private_issues_for_project(issue.project)
+		post_private_issues = post_private_issues_for_project(issue.project)
 
-		return unless channels.any? and url
+		return unless channels.present? and url
 		return if issue.is_private? and post_private_issues != '1'
 
 		msg = "[#{escape issue.project}] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description}"
@@ -44,10 +44,10 @@ class MattermostListener < Redmine::Hook::Listener
 
 		channels = channels_for_project issue.project
 		url = url_for_project issue.project
-    post_private_issues = post_private_issues_for_project(issue.project)
-    post_private_notes = post_private_notes_for_project(issue.project)
+		post_private_issues = post_private_issues_for_project(issue.project)
+		post_private_notes = post_private_notes_for_project(issue.project)
 
-    return unless channels.any? and url and Setting.plugin_redmine_mattermost[:post_updates] == '1'
+		return unless channels.present? and url and Setting.plugin_redmine_mattermost[:post_updates] == '1'
 		return if issue.is_private?	and post_private_issues != '1'
 		return if journal.private_notes? and post_private_notes != '1'
 
@@ -67,9 +67,9 @@ class MattermostListener < Redmine::Hook::Listener
 
 		channels = channels_for_project issue.project
 		url = url_for_project issue.project
-    post_private_issues = post_private_issues_for_project(issue.project)
+		post_private_issues = post_private_issues_for_project(issue.project)
 
-    return unless channels.any? and url and issue.save
+		return unless channels.present? and url and issue.save
 		return if issue.is_private? and post_private_issues != '1'
 
 		msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>"
@@ -122,6 +122,8 @@ class MattermostListener < Redmine::Hook::Listener
 		channels = channels_for_project project
 		url = url_for_project project
 
+		return unless channels.present? and url
+
 		attachment = nil
     unless page.content.comments.empty?
       attachment = {}
@@ -132,6 +134,8 @@ class MattermostListener < Redmine::Hook::Listener
 	end
 
 	def speak(msg, channels, attachment=nil, url=nil)
+	return if channels.blank?
+
 		url = Setting.plugin_redmine_mattermost[:mattermost_url] unless url
 		username = Setting.plugin_redmine_mattermost[:username]
 		icon = Setting.plugin_redmine_mattermost[:icon]
@@ -193,7 +197,7 @@ private
 			(proj.custom_value_for(cf).value rescue nil),
 			(url_for_project proj.parent),
 			Setting.plugin_redmine_mattermost[:mattermost_url],
-		].flatten.find{|v| v.present?}
+		].flatten.find(&:present?)
 	end
 
 	def post_private_issues_for_project(proj)
@@ -204,7 +208,7 @@ private
 				(proj.custom_value_for(cf).value rescue nil),
 				(post_private_issues_for_project proj.parent),
 				Setting.plugin_redmine_mattermost[:post_private_issues],
-		].flatten.find{|v| v.present?}
+		].flatten.find(&:present?)
 	end
 
 	def post_private_notes_for_project(proj)
@@ -215,19 +219,18 @@ private
 				(proj.custom_value_for(cf).value rescue nil),
 				(post_private_notes_for_project proj.parent),
 				Setting.plugin_redmine_mattermost[:post_private_notes],
-		].flatten.find { |v| v.present? }
+		].flatten.find(&:present?)
 	end
 
 	def channels_for_project(proj)
 		return nil if proj.blank?
 
 		cf = ProjectCustomField.find_by_name("Mattermost Channel")
-
 		val = [
 			(proj.custom_value_for(cf).value rescue nil),
 			(channels_for_project proj.parent),
 			Setting.plugin_redmine_mattermost[:channel],
-		].flatten.find{|v| v.present?}
+		].flatten.find(&:present?)
 
 		# Channel name '-' or empty '' is reserved for NOT notifying
 		return [] if val.nil? or val.to_s == ''
