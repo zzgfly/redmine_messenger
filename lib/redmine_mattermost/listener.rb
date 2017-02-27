@@ -230,7 +230,7 @@ private
 		].flatten.find{|v| v.present?}
 
 		# Channel name '-' or empty '' is reserved for NOT notifying
-		return [] if val.to_s == ''
+		return [] if val.nil? or val.to_s == ''
 		return [] if val.to_s == '-'
 		return val.split(",") if val.is_a? String
 		val
