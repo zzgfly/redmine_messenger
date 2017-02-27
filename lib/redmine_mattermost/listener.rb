@@ -189,33 +189,33 @@ private
 
 		cf = ProjectCustomField.find_by_name("Mattermost URL")
 
-		return [
+		[
 			(proj.custom_value_for(cf).value rescue nil),
 			(url_for_project proj.parent),
 			Setting.plugin_redmine_mattermost[:mattermost_url],
-		].find{|v| v.present?}
+		].flatten.find{|v| v.present?}
 	end
 
 	def post_private_issues_for_project(proj)
 		return nil if proj.blank?
 
 		cf = ProjectCustomField.find_by_name("Mattermost Post private issues")
-		return [
+		[
 				(proj.custom_value_for(cf).value rescue nil),
 				(post_private_issues_for_project proj.parent),
 				Setting.plugin_redmine_mattermost[:post_private_issues],
-		].find{|v| v.present?}
+		].flatten.find{|v| v.present?}
 	end
 
 	def post_private_notes_for_project(proj)
 		return nil if proj.blank?
 
 		cf = ProjectCustomField.find_by_name("Mattermost Post private notes")
-		return [
+		[
 				(proj.custom_value_for(cf).value rescue nil),
 				(post_private_notes_for_project proj.parent),
 				Setting.plugin_redmine_mattermost[:post_private_notes],
-		].find{|v| v.present?}
+		].flatten.find { |v| v.present? }
 	end
 
 	def channels_for_project(proj)
@@ -227,7 +227,7 @@ private
 			(proj.custom_value_for(cf).value rescue nil),
 			(channels_for_project proj.parent),
 			Setting.plugin_redmine_mattermost[:channel],
-		].find{|v| v.present?}
+		].flatten.find{|v| v.present?}
 
 		# Channel name '-' or empty '' is reserved for NOT notifying
 		return [] if val.to_s == ''
