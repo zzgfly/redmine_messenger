@@ -56,12 +56,12 @@ Step 3: Configure this Redmine plugin for Rocket.Chat. For per-project customize
 
 Step 4: For per-project customized routing, first create the project custom field (Administration > Custom fields > New custom field > Projects).
 
-![step4a](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/assets/step4a.png)
-![step4b](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/assets/step4b.png)
+![step4a](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/step4a.png)
+![step4b](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/step4b.png)
 
 Step 5: For per-project customized routing, configure the Rocket.Chat channel handle inside your Redmine project.
 
-![step5](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/assets/step5.png)
+![step5](https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/step5.png)
 
 ## Credits
 
