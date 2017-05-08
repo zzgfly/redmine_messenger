@@ -1,9 +1,9 @@
-# Rocket.Chat plugin for Redmine
+# Messenger plugin for Redmine
 
-This plugin posts updates to issues in your Redmine installation to a Rocket.Chat
-channel.
+This plugin posts updates to issues in your Redmine installation to Slack, Rocket.Chat or Mattermost channel.
 
-Redmine Supported versions: 2.0.x - 3.3.x.
+Redmine Supported versions: 3.3.x.
+
 
 ## Screenshot
 
