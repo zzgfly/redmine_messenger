@@ -4,7 +4,7 @@ require 'httpclient'
 
 module RedmineMessenger
   class MessengerListener < Redmine::Hook::Listener
-    def redmine_rocketchat_issues_new_after_save(context={})
+    def redmine_rocketchat_issues_new_after_save(context = {})
       issue = context[:issue]
 
       channels = channels_for_project issue.project
@@ -14,10 +14,10 @@ module RedmineMessenger
       return unless channels.present? && url
       return if issue.is_private? && post_private_issues != '1'
 
-      msg = "[#{escape issue.project}] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description if Setting.plugin_redmine_rocketchat[:auto_mentions] == '1'}"
+      msg = "[#{escape issue.project}] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description if RedmineMessenger.settings[:auto_mentions] == '1'}"
 
       attachment = {}
-      attachment[:text] = escape issue.description if issue.description && Setting.plugin_redmine_rocketchat[:new_include_description] == '1'
+      attachment[:text] = escape issue.description if issue.description && RedmineMessenger.settings[:new_include_description] == '1'
       attachment[:fields] = [{
         title: I18n.t(:field_status),
         value: escape(issue.status.to_s),
@@ -36,7 +36,7 @@ module RedmineMessenger
         title: I18n.t(:field_watcher),
         value: escape(issue.watcher_users.join(', ')),
         short: true
-      } if Setting.plugin_redmine_rocketchat[:display_watchers] == '1'
+      } if RedmineMessenger.settings[:display_watchers] == '1'
 
       speak msg, channels, attachment, url
     end
@@ -50,20 +50,20 @@ module RedmineMessenger
       post_private_issues = post_private_issues_for_project(issue.project)
       post_private_notes = post_private_notes_for_project(issue.project)
 
-      return unless channels.present? and url and Setting.plugin_redmine_rocketchat[:post_updates] == '1'
-      return if issue.is_private?  and post_private_issues != '1'
-      return if journal.private_notes? and post_private_notes != '1'
+      return unless channels.present? && url && RedmineMessenger.settings[:post_updates] == '1'
+      return if issue.is_private? && post_private_issues != '1'
+      return if journal.private_notes? && post_private_notes != '1'
 
-      msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes if Setting.plugin_redmine_rocketchat[:auto_mentions] == '1'}"
+      msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes if RedmineMessenger.settings[:auto_mentions] == '1'}"
 
       attachment = {}
-      attachment[:text] = escape journal.notes if journal.notes && Setting.plugin_redmine_rocketchat[:updated_include_description] == '1'
+      attachment[:text] = escape journal.notes if journal.notes && RedmineMessenger.settings[:updated_include_description] == '1'
       attachment[:fields] = journal.details.map { |d| detail_to_field d }
 
       speak msg, channels, attachment, url
     end
 
-    def model_changeset_scan_commit_for_issue_ids_pre_issue_update(context={})
+    def model_changeset_scan_commit_for_issue_ids_pre_issue_update(context = {})
       issue = context[:issue]
       journal = issue.current_journal
       changeset = context[:changeset]
@@ -72,8 +72,8 @@ module RedmineMessenger
       url = url_for_project issue.project
       post_private_issues = post_private_issues_for_project(issue.project)
 
-      return unless channels.present? and url and issue.save
-      return if issue.is_private? and post_private_issues != '1'
+      return unless channels.present? && url && issue.save
+      return if issue.is_private? && post_private_issues != '1'
 
       msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>"
 
@@ -82,25 +82,25 @@ module RedmineMessenger
       if Setting.host_name.to_s =~ /\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i
         host, port, prefix = $2, $4, $5
         revision_url = Rails.application.routes.url_for(
-          :controller => 'repositories',
-          :action => 'revision',
-          :id => repository.project,
-          :repository_id => repository.identifier_param,
-          :rev => changeset.revision,
-          :host => host,
-          :protocol => Setting.protocol,
-          :port => port,
-          :script_name => prefix
+          controller: 'repositories',
+          action: 'revision',
+          id: repository.project,
+          repository_id: repository.identifier_param,
+          rev: changeset.revision,
+          host: host,
+          protocol: Setting.protocol,
+          port: port,
+          script_name: prefix
         )
       else
         revision_url = Rails.application.routes.url_for(
-          :controller => 'repositories',
-          :action => 'revision',
-          :id => repository.project,
-          :repository_id => repository.identifier_param,
-          :rev => changeset.revision,
-          :host => Setting.host_name,
-          :protocol => Setting.protocol
+          controller: 'repositories',
+          action: 'revision',
+          id: repository.project,
+          repository_id: repository.identifier_param,
+          rev: changeset.revision,
+          host: Setting.host_name,
+          protocol: Setting.protocol
         )
       end
 
@@ -111,8 +111,8 @@ module RedmineMessenger
       speak msg, channels, attachment, url
     end
 
-    def controller_wiki_edit_after_save(context = { })
-      return unless Setting.plugin_redmine_rocketchat[:post_wiki_updates] == '1'
+    def controller_wiki_edit_after_save(context = {})
+      return unless RedmineMessenger.settings[:post_wiki_updates] == '1'
 
       project = context[:project]
       page = context[:page]
@@ -125,7 +125,7 @@ module RedmineMessenger
       channels = channels_for_project project
       url = url_for_project project
 
-      return unless channels.present? and url
+      return unless channels.present? && url
 
       attachment = nil
       unless page.content.comments.empty?
@@ -136,24 +136,22 @@ module RedmineMessenger
       speak comment, channels, attachment, url
     end
 
-    def speak(msg, channels, attachment=nil, url=nil)
-    return if channels.blank?
+    def speak(msg, channels, attachment = nil, url = nil)
+      return if channels.blank?
 
-      url = Setting.plugin_redmine_rocketchat[:rocketchat_url] unless url
-      username = Setting.plugin_redmine_rocketchat[:username]
-      icon = Setting.plugin_redmine_rocketchat[:icon]
+      url = RedmineMessenger.settings[:messenger_url] unless url
+      username = RedmineMessenger.settings[:messenger_username]
+      icon = RedmineMessenger.settings[:messenger_icon]
 
       params = {
-        :text => msg,
-        :link_names => 1,
+        text: msg,
+        link_names: 1
       }
 
       params[:username] = username if username
-
-
       params[:attachments] = [attachment] if attachment
 
-      if icon and not icon.empty?
+      if icon.present?
         if icon.start_with? ':'
           params[:icon_emoji] = icon
         else
@@ -169,7 +167,7 @@ module RedmineMessenger
           client.ssl_config.cert_store.set_default_paths
           client.ssl_config.ssl_version = :auto
           client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          client.post_async url, {:payload => params.to_json}
+          client.post_async url, payload: params.to_json
         rescue Exception => e
           Rails.logger.warn("cannot connect to #{url}")
           Rails.logger.warn(e)
@@ -178,6 +176,7 @@ module RedmineMessenger
     end
 
   private
+
     def escape(msg)
       msg.to_s.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;')
     end
@@ -185,67 +184,67 @@ module RedmineMessenger
     def object_url(obj)
       if Setting.host_name.to_s =~ /\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i
         host, port, prefix = $2, $4, $5
-        Rails.application.routes.url_for(obj.event_url({:host => host, :protocol => Setting.protocol, :port => port, :script_name => prefix}))
+        Rails.application.routes.url_for(obj.event_url(host: host, protocol: Setting.protocol, port: port, script_name: prefix))
       else
-        Rails.application.routes.url_for(obj.event_url({:host => Setting.host_name, :protocol => Setting.protocol}))
+        Rails.application.routes.url_for(obj.event_url(host: Setting.host_name, protocol: Setting.protocol))
       end
     end
 
     def url_for_project(proj)
       return nil if proj.blank?
 
-      cf = ProjectCustomField.find_by_name('Rocket.Chat URL')
+      cf = ProjectCustomField.find_by_name('Messenger URL')
 
       [
         (proj.custom_value_for(cf).value rescue nil),
         (url_for_project proj.parent),
-        Setting.plugin_redmine_rocketchat[:rocketchat_url],
+        RedmineMessenger.settings[:messenger_url]
       ].flatten.find(&:present?)
     end
 
     def post_private_issues_for_project(proj)
       return nil if proj.blank?
 
-      cf = ProjectCustomField.find_by_name('Rocket.Chat Post private issues')
+      cf = ProjectCustomField.find_by_name('Messenger Post private issues')
       [
-          (proj.custom_value_for(cf).value rescue nil),
-          (post_private_issues_for_project proj.parent),
-          Setting.plugin_redmine_rocketchat[:post_private_issues],
+        (proj.custom_value_for(cf).value rescue nil),
+        (post_private_issues_for_project proj.parent),
+        RedmineMessenger.settings[:post_private_issues]
       ].flatten.find(&:present?)
     end
 
     def post_private_notes_for_project(proj)
       return nil if proj.blank?
 
-      cf = ProjectCustomField.find_by_name('Rocket.Chat Post private notes')
+      cf = ProjectCustomField.find_by_name('Messenger Post private notes')
       [
-          (proj.custom_value_for(cf).value rescue nil),
-          (post_private_notes_for_project proj.parent),
-          Setting.plugin_redmine_rocketchat[:post_private_notes],
+        (proj.custom_value_for(cf).value rescue nil),
+        (post_private_notes_for_project proj.parent),
+        RedmineMessenger.settings[:post_private_notes]
       ].flatten.find(&:present?)
     end
 
     def channels_for_project(proj)
       return nil if proj.blank?
 
-      cf = ProjectCustomField.find_by_name('Rocket.Chat Channel')
+      cf = ProjectCustomField.find_by_name('Messenger Channel')
       val = [
         (proj.custom_value_for(cf).value rescue nil),
         (channels_for_project proj.parent),
-        Setting.plugin_redmine_rocketchat[:channel],
+        RedmineMessenger.settings[:messenger_channel]
       ].flatten.find(&:present?)
 
       # Channel name '-' or empty '' is reserved for NOT notifying
-      return [] if val.nil? or val.to_s == ''
+      return [] if val.nil? || val.to_s == ''
       return [] if val.to_s == '-'
-      return val.split(",") if val.is_a? String
+      return val.split(',') if val.is_a? String
       val
     end
 
     def detail_to_field(detail)
       field_format = nil
 
-      if detail.property == "cf"
+      if detail.property == 'cf'
         key = CustomField.find(detail.prop_key).name rescue nil
         title = key
         field_format = CustomField.find(detail.prop_key).field_format rescue nil

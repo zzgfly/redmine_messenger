@@ -9,13 +9,13 @@ Redmine::Plugin.register :redmine_messenger do
   description 'Messenger integration for Slack, Rocketchat and Mattermost support'
   version '0.6.2-dev'
 
-  requires_redmine version_or_higher: '3.3.0'
+  requires_redmine version_or_higher: '3.0.0'
 
   settings default: {
-    callback_url: 'https://rocket.chat/hooks/my_rocket_chat_token',
-    channel: 'redmine',
-    icon: 'https://raw.githubusercontent.com/phlegx/redmine_rocketchat/assets/icon.png',
-    username: 'redmine.bot',
+    messenger_url: '',
+    messenger_channel: 'redmine',
+    messenger_icon: 'https://raw.githubusercontent.com/alphanodes/redmine_messenger/assets/icon.png',
+    messenger_username: 'redmine.bot',
     display_watchers: '0',
     auto_mentions: '1',
     post_updates: '1',

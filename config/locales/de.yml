@@ -1,0 +1,16 @@
+# German strings
+de:
+  label_settings_messenger_channel: Messenger Channel
+  label_settings_messenger_username: Messenger Benutzer
+  label_settings_messenger_url: Messenger URL
+  label_settings_messenger_icon: Messenger Icon
+  messenger_channel_info_html: 'The channel can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Rocket.Chat Channel">project custom field</a> named "Messenger Channel" (without quotes).'
+  messenger_url_info_html: 'Generate an "Incoming WebHook" URL from the <a href="https://rocket.chat/docs/administrator-guides/integrations/">Integrations configuration page on Rocket.Chat</a>. This URL can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Messenger Channel">project custom field</a> named "Messenger URL" (without quotes).'
+  label_settings_auto_mentions: Convert names to mentions?
+  label_settings_display_watchers: Display watchers?
+  label_settings_post_updates: Post issue updates?
+  label_settings_new_include_description: Description in new issue?
+  label_settings_updated_include_description: Description in update issue?
+  label_settings_post_private_issues: Post updates for private issues?
+  label_settings_post_private_notes: Post private notes?
+  label_settings_post_wiki_updates: Post Wiki updates?

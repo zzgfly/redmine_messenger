@@ -1,71 +1,54 @@
 <p>
-  <label for="settings_rocketchat_url">Rocket.Chat URL</label>
-  <input type="text" id="settings_rocketchat_url" size=80 value="<%= settings['rocketchat_url'] %>" name="settings[rocketchat_url]" placeholder="https://rocket.chat/hooks/my_rocket_chat_token" />
+  <%= content_tag(:label, l(:label_settings_messenger_url)) %>
+  <%= text_field_tag('settings[messenger_url]', @settings[:messenger_url], size: 60, placeholder: 'https://rocket.chat/hooks/my_rocket_chat_token') %>
+  <em class="info"><%= t(:messenger_url_info_html) %></em>
 </p>
 
 <p>
-  Generate an "Incoming WebHook" URL from the <a href="https://rocket.chat/docs/administrator-guides/integrations/">Integrations configuration page on Rocket.Chat</a>.
-  This URL can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Rocket.Chat Channel">project custom field</a>
-  named "Rocket.Chat URL" (without quotes).
+  <%= content_tag(:label, l(:label_settings_messenger_icon)) %>
+  <%= text_field_tag('settings[messenger_icon]', @settings[:messenger_icon], size: 60) %>
 </p>
 
 <p>
-  <label for="settings_channel">Rocket.Chat Channel</label>
-  <input type="text" id="settings_channel" value="<%= settings['channel'] %>" name="settings[channel]" placeholder="redmine" />
+  <%= content_tag(:label, l(:label_settings_messenger_channel)) %>
+  <%= text_field_tag('settings[messenger_channel]', @settings[:messenger_channel], size: 30, placeholder: 'redmine') %>
+  <em class="info"><%= t(:messenger_channel_info_html) %></em>
 </p>
 
 <p>
-  The channel can be changed on a per-project basis by creating a
-  <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Rocket.Chat Channel">project custom field</a>
-  named "Rocket.Chat Channel" (without quotes).
+  <%= content_tag(:label, l(:label_settings_messenger_username)) %>
+  <%= text_field_tag('settings[messenger_username]', @settings[:messenger_username], size: 30) %>
 </p>
 
 <p>
-  <label for="settings_icon">Rocket.Chat Icon</label>
-  <input type="text" id="settings_icon" value="<%= settings['icon'] %>" name="settings[icon]" />
+  <%= content_tag(:label, l(:label_settings_auto_mentions)) %>
+  <%= check_box_tag 'settings[auto_mentions]', 1, @settings[:auto_mentions] %>
 </p>
-
 <p>
-  <label for="settings_username">Rocket.Chat Username</label>
-  <input type="text" id="settings_username" value="<%= settings['username'] %>" name="settings[username]" placeholder="redmine.bot" />
+  <%= content_tag(:label, l(:label_settings_display_watchers)) %>
+  <%= check_box_tag 'settings[display_watchers]', 1, @settings[:display_watchers] %>
 </p>
-
 <p>
-  <label for="settings_auto_mentions">Display watchers?</label>
-  <input type="checkbox" id="settings_display_watchers" value="1" name="settings[display_watchers]" <%= settings['display_watchers'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_post_updates)) %>
+  <%= check_box_tag 'settings[post_updates]', 1, @settings[:post_updates] %>
 </p>
-
 <p>
-  <label for="settings_auto_mentions">Convert names to mentions?</label>
-  <input type="checkbox" id="settings_auto_mentions" value="1" name="settings[auto_mentions]" <%= settings['auto_mentions'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_new_include_description)) %>
+  <%= check_box_tag 'settings[new_include_description]', 1, @settings[:new_include_description] %>
 </p>
-
 <p>
-  <label for="settings_post_updates">Post issue updates?</label>
-  <input type="checkbox" id="settings_post_updates" value="1" name="settings[post_updates]" <%= settings['post_updates'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_updated_include_description)) %>
+  <%= check_box_tag 'settings[updated_include_description]', 1, @settings[:updated_include_description] %>
 </p>
-
 <p>
-  <label for="settings_new_include_description">Description in new issue?</label>
-  <input type="checkbox" id="settings_new_include_description" value="1" name="settings[new_include_description]" <%= settings['new_include_description'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_post_private_issues)) %>
+  <%= check_box_tag 'settings[post_private_issues]', 1, @settings[:post_private_issues] %>
 </p>
-
 <p>
-  <label for="settings_updated_include_description">Description in update issue?</label>
-  <input type="checkbox" id="settings_updated_include_description" value="1" name="settings[updated_include_description]" <%= settings['updated_include_description'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_post_private_notes)) %>
+  <%= check_box_tag 'settings[post_private_notes]', 1, @settings[:post_private_notes] %>
 </p>
-
 <p>
-  <label for="settings_post_updates">Post updates for private issues?</label>
-  <input type="checkbox" id="settings_post_private_issues" value="1" name="settings[post_private_issues]" <%= settings['post_private_issues'] == '1' ? 'checked="checked"' : '' %> />
-</p>
-
-<p>
-  <label for="settings_post_updates">Post private notes?</label>
-  <input type="checkbox" id="settings_post_private_notes" value="1" name="settings[post_private_notes]" <%= settings['post_private_notes'] == '1' ? 'checked="checked"' : '' %> />
-</p>
-
-<p>
-  <label for="settings_post_wiki_updates">Post Wiki updates?</label>
-  <input type="checkbox" id="settings_post_wiki_updates" value="1" name="settings[post_wiki_updates]" <%= settings['post_wiki_updates'] == '1' ? 'checked="checked"' : '' %> />
+  <%= content_tag(:label, l(:label_settings_post_wiki_updates)) %>
+  <%= check_box_tag 'settings[post_wiki_updates]', 1, @settings[:post_wiki_updates] %>
 </p>

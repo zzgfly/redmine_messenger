@@ -6,4 +6,10 @@ Rails.configuration.to_prepare do
 
   # Hooks
   require_dependency 'redmine_messenger/hooks'
+
+  module RedmineMessenger
+    def self.settings
+      Setting[:plugin_redmine_messenger].blank? ? {} : Setting[:plugin_redmine_messenger]
+    end
+  end
 end
