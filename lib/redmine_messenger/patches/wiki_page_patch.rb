@@ -14,26 +14,22 @@ module RedmineMessenger
       module InstanceMethods
         def send_messenger_create
           return unless RedmineMessenger.settings[:post_wiki] == '1'
-
-          user = User.current
-          project_url = "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>"
-          page_url = "<#{Messenger.object_url self}|#{title}>"
-          comment = "[#{project_url}] #{page_url} created by *#{user}*"
+          set_language_if_valid Setting.default_language
 
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
 
           return unless channels.present? && url
-          Messenger.speak comment, channels, nil, url
+          Messenger.speak(l(:label_messenger_wiki_created,
+                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            url: "<#{Messenger.object_url self}|#{title}>",
+                            user: User.current),
+                          channels, nil, url)
         end
 
         def send_messenger_update
           return unless RedmineMessenger.settings[:post_wiki_updates] == '1'
-
-          user = content.author
-          project_url = "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>"
-          page_url = "<#{Messenger.object_url self}|#{title}>"
-          comment = "[#{project_url}] #{page_url} updated by *#{user}*"
+          set_language_if_valid Setting.default_language
 
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
@@ -46,7 +42,11 @@ module RedmineMessenger
             attachment[:text] = ERB::Util.html_escape(content.comments.to_s)
           end
 
-          Messenger.speak comment, channels, attachment, url
+          Messenger.speak(l(:label_messenger_wiki_updated,
+                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            url: "<#{Messenger.object_url self}|#{title}>",
+                            user: content.author),
+                          channels, attachment, url)
         end
       end
     end

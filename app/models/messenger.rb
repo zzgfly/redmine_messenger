@@ -123,7 +123,11 @@ class Messenger
       title = I18n.t :label_attachment
     else
       key = detail.prop_key.to_s.sub('_id', '')
-      title = I18n.t "field_#{key}"
+      title = if key == 'parent'
+                I18n.t "field_#{key}_issue"
+              else
+                I18n.t "field_#{key}"
+              end
     end
 
     short = true
