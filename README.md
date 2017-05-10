@@ -14,9 +14,23 @@ Redmine configuration:
 
 ![screenshot](https://raw.githubusercontent.com/alphanodes/redmine_messenger/master/assets/images/screenshot_redmine_settings.png)
 
+## Prepare your messenger service
+
+### Slack
+
+Go to Slack documentation [Incoming Webhooks](https://api.slack.com/incoming-webhooks) for more information to set up Incoming WebHook
+
+### Mattermost
+
+Go to Mattermost documentation [Incoming Webhooks](https://docs.mattermost.com/developer/webhooks-incoming.) for more information to set up Incoming WebHook
+
+### Rocket.Chat
+
+Go to Rocket.Chat documentation [Rocket.Chat](https://rocket.chat/docs/administrator-guides/integrations/) for more information to set up Incoming WebHook
+
 ## Installation
 
-Install ``redmine_messenger`` plugin for `Redmine`_
+Install ``redmine_messenger`` plugin for `Redmine`
 
     cd $REDMINE_ROOT
     git clone git://github.com/alphanodes/redmine_messenger.git plugins/redmine_messenger
@@ -24,7 +38,7 @@ Install ``redmine_messenger`` plugin for `Redmine`_
 
 Restart Redmine, and you should see the plugin show up in the Plugins page.
 Under the configuration options, set the Messenger API URL to the URL for an
-Incoming WebHook integration in your Rocket.Chat account and also set the Messenger
+Incoming WebHook integration in your Messenger account and also set the Messenger
 Channel to the channel's handle (be careful, this is not the channel's display name
 visible to users, you can find each channel's handle by navigating inside the channel
 and clicking the down-arrow and selecting view info). See also the next two sections
