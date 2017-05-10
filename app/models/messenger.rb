@@ -5,18 +5,20 @@ class Messenger
   include Redmine::I18n
 
   def self.speak(msg, channels, attachment = nil, url = nil)
-    return if channels.blank?
-
     url = RedmineMessenger.settings[:messenger_url] unless url
-    username = RedmineMessenger.settings[:messenger_username]
     icon = RedmineMessenger.settings[:messenger_icon]
+
+    return if url.blank?
+    return if channels.blank?
 
     params = {
       text: msg,
       link_names: 1
     }
 
-    params[:username] = username if username
+    if RedmineMessenger.settings[:messenger_username].present?
+      params[:username] = RedmineMessenger.settings[:messenger_username]
+    end
     params[:attachments] = [attachment] if attachment
 
     if icon.present?
@@ -36,7 +38,7 @@ class Messenger
         client.ssl_config.ssl_version = :auto
         client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
         client.post_async url, payload: params.to_json
-      rescue Exception => e
+      rescue StandardError => e
         Rails.logger.warn("cannot connect to #{url}")
         Rails.logger.warn(e)
       end
@@ -44,7 +46,7 @@ class Messenger
   end
 
   def self.object_url(obj)
-    if Setting.host_name.to_s =~ /\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i
+    if Setting.host_name.to_s =~ %r{/\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i}
       host = Regexp.last_match(2)
       port = Regexp.last_match(4)
       prefix = Regexp.last_match(5)
@@ -89,9 +91,9 @@ class Messenger
   end
 
   def self.channels_for_project(proj)
-    return nil if proj.blank?
+    return if proj.blank?
 
-    cf = ProjectCustomField.find_by_name('Messenger Channel')
+    cf = ProjectCustomField.find_by(name: 'Messenger Channel')
     val = [
       (proj.custom_value_for(cf).value rescue nil),
       (channels_for_project proj.parent),
