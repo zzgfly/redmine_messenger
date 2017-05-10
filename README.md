@@ -8,11 +8,11 @@ Redmine Supported versions: 3.0.x.
 
 Mattermost output:
 
-![screenshot](https://raw.githubusercontent.com/alphanodes/redmine_messenger/assets/screenshot_mattermost.png)
+![screenshot](https://raw.githubusercontent.com/alphanodes/redmine_messenger/master/assets/images/screenshot_mattermost.png)
 
 Redmine configuration:
 
-![screenshot](https://raw.githubusercontent.com/alphanodes/redmine_messenger/assets/screenshot_redmine_settings.png)
+![screenshot](https://raw.githubusercontent.com/alphanodes/redmine_messenger/master/assets/images/screenshot_redmine_settings.png)
 
 ## Installation
 

@@ -14,7 +14,7 @@ Redmine::Plugin.register :redmine_messenger do
   settings default: {
     messenger_url: '',
     messenger_channel: 'redmine',
-    messenger_icon: 'https://raw.githubusercontent.com/alphanodes/redmine_messenger/assets/icon.png',
+    messenger_icon: 'https://raw.githubusercontent.com/alphanodes/redmine_messenger/master/assets/images/icon.png',
     messenger_username: 'robot',
     display_watchers: '0',
     auto_mentions: '1',
