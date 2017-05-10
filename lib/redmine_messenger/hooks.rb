@@ -1,40 +1,38 @@
 # Redmine Messenger plugin for Redmine
 
-require 'httpclient'
-
 module RedmineMessenger
   class MessengerListener < Redmine::Hook::Listener
     def redmine_rocketchat_issues_new_after_save(context = {})
       issue = context[:issue]
 
-      channels = channels_for_project issue.project
-      url = url_for_project issue.project
-      post_private_issues = post_private_issues_for_project(issue.project)
+      channels = Messenger.channels_for_project issue.project
+      url = Messenger.url_for_project issue.project
+      post_private_issues = Messenger.post_private_issues_for_project(issue.project)
 
       return unless channels.present? && url
       return if issue.is_private? && post_private_issues != '1'
 
-      msg = "[#{escape issue.project}] #{escape issue.author} created <#{object_url issue}|#{escape issue}>#{mentions issue.description if RedmineMessenger.settings[:auto_mentions] == '1'}"
+      msg = "[#{ERB::Util.html_escape(issue.project)}] #{ERB::Util.html_escape(issue.author)} created <#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>#{Messenger.mentions issue.description if RedmineMessenger.settings[:auto_mentions] == '1'}"
 
       attachment = {}
-      attachment[:text] = escape issue.description if issue.description && RedmineMessenger.settings[:new_include_description] == '1'
+      attachment[:text] = ERB::Util.html_escape(issue.description) if issue.description && RedmineMessenger.settings[:new_include_description] == '1'
       attachment[:fields] = [{
         title: I18n.t(:field_status),
-        value: escape(issue.status.to_s),
+        value: ERB::Util.html_escape(issue.status.to_s),
         short: true
       }, {
         title: I18n.t(:field_priority),
-        value: escape(issue.priority.to_s),
+        value: ERB::Util.html_escape(issue.priority.to_s),
         short: true
       }, {
         title: I18n.t(:field_assigned_to),
-        value: escape(issue.assigned_to.to_s),
+        value: ERB::Util.html_escape(issue.assigned_to.to_s),
         short: true
       }]
 
       attachment[:fields] << {
         title: I18n.t(:field_watcher),
-        value: escape(issue.watcher_users.join(', ')),
+        value: ERB::Util.html_escape(issue.watcher_users.join(', ')),
         short: true
       } if RedmineMessenger.settings[:display_watchers] == '1'
 
@@ -45,20 +43,20 @@ module RedmineMessenger
       issue = context[:issue]
       journal = context[:journal]
 
-      channels = channels_for_project issue.project
-      url = url_for_project issue.project
-      post_private_issues = post_private_issues_for_project(issue.project)
-      post_private_notes = post_private_notes_for_project(issue.project)
+      channels = Messenger.channels_for_project issue.project
+      url = Messenger.url_for_project issue.project
+      post_private_issues = Messenger.post_private_issues_for_project(issue.project)
+      post_private_notes = Messenger.post_private_notes_for_project(issue.project)
 
       return unless channels.present? && url && RedmineMessenger.settings[:post_updates] == '1'
       return if issue.is_private? && post_private_issues != '1'
       return if journal.private_notes? && post_private_notes != '1'
 
-      msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>#{mentions journal.notes if RedmineMessenger.settings[:auto_mentions] == '1'}"
+      msg = "[#{ERB::Util.html_escape(issue.project)}] #{ERB::Util.html_escape(journal.user.to_s)} updated <#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>#{Messenger.mentions journal.notes if RedmineMessenger.settings[:auto_mentions] == '1'}"
 
       attachment = {}
-      attachment[:text] = escape journal.notes if journal.notes && RedmineMessenger.settings[:updated_include_description] == '1'
-      attachment[:fields] = journal.details.map { |d| detail_to_field d }
+      attachment[:text] = ERB::Util.html_escape(journal.notes) if journal.notes && RedmineMessenger.settings[:updated_include_description] == '1'
+      attachment[:fields] = journal.details.map { |d| Messenger.detail_to_field d }
 
       speak msg, channels, attachment, url
     end
@@ -68,14 +66,14 @@ module RedmineMessenger
       journal = issue.current_journal
       changeset = context[:changeset]
 
-      channels = channels_for_project issue.project
-      url = url_for_project issue.project
-      post_private_issues = post_private_issues_for_project(issue.project)
+      channels = Messenger.channels_for_project issue.project
+      url = Messenger.url_for_project issue.project
+      post_private_issues = Messenger.post_private_issues_for_project(issue.project)
 
       return unless channels.present? && url && issue.save
       return if issue.is_private? && post_private_issues != '1'
 
-      msg = "[#{escape issue.project}] #{escape journal.user.to_s} updated <#{object_url issue}|#{escape issue}>"
+      msg = "[#{ERB::Util.html_escape(issue.project)}] #{ERB::Util.html_escape(journal.user.to_s)} updated <#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>"
 
       repository = changeset.repository
 
@@ -105,8 +103,8 @@ module RedmineMessenger
       end
 
       attachment = {}
-      attachment[:text] = ll(Setting.default_language, :text_status_changed_by_changeset, "<#{revision_url}|#{escape changeset.comments}>")
-      attachment[:fields] = journal.details.map { |d| detail_to_field d }
+      attachment[:text] = ll(Setting.default_language, :text_status_changed_by_changeset, "<#{revision_url}|#{ERB::Util.html_escape(changeset.comments)}>")
+      attachment[:fields] = journal.details.map { |d| Messenger.detail_to_field d }
 
       speak msg, channels, attachment, url
     end
@@ -118,204 +116,22 @@ module RedmineMessenger
       page = context[:page]
 
       user = page.content.author
-      project_url = "<#{object_url project}|#{escape project}>"
-      page_url = "<#{object_url page}|#{page.title}>"
+      project_url = "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>"
+      page_url = "<#{Messenger.object_url page}|#{page.title}>"
       comment = "[#{project_url}] #{page_url} updated by *#{user}*"
 
-      channels = channels_for_project project
-      url = url_for_project project
+      channels = Messenger.channels_for_project project
+      url = Messenger.url_for_project project
 
       return unless channels.present? && url
 
       attachment = nil
       unless page.content.comments.empty?
         attachment = {}
-        attachment[:text] = "#{escape page.content.comments}"
+        attachment[:text] = "#{ERB::Util.html_escape(page.content.comments)}"
       end
 
       speak comment, channels, attachment, url
-    end
-
-    def speak(msg, channels, attachment = nil, url = nil)
-      return if channels.blank?
-
-      url = RedmineMessenger.settings[:messenger_url] unless url
-      username = RedmineMessenger.settings[:messenger_username]
-      icon = RedmineMessenger.settings[:messenger_icon]
-
-      params = {
-        text: msg,
-        link_names: 1
-      }
-
-      params[:username] = username if username
-      params[:attachments] = [attachment] if attachment
-
-      if icon.present?
-        if icon.start_with? ':'
-          params[:icon_emoji] = icon
-        else
-          params[:icon_url] = icon
-        end
-      end
-
-      channels.each do |channel|
-        params[:channel] = channel
-
-        begin
-          client = HTTPClient.new
-          client.ssl_config.cert_store.set_default_paths
-          client.ssl_config.ssl_version = :auto
-          client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          client.post_async url, payload: params.to_json
-        rescue Exception => e
-          Rails.logger.warn("cannot connect to #{url}")
-          Rails.logger.warn(e)
-        end
-      end
-    end
-
-  private
-
-    def escape(msg)
-      msg.to_s.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;')
-    end
-
-    def object_url(obj)
-      if Setting.host_name.to_s =~ /\A(https?\:\/\/)?(.+?)(\:(\d+))?(\/.+)?\z/i
-        host, port, prefix = $2, $4, $5
-        Rails.application.routes.url_for(obj.event_url(host: host, protocol: Setting.protocol, port: port, script_name: prefix))
-      else
-        Rails.application.routes.url_for(obj.event_url(host: Setting.host_name, protocol: Setting.protocol))
-      end
-    end
-
-    def url_for_project(proj)
-      return nil if proj.blank?
-
-      cf = ProjectCustomField.find_by_name('Messenger URL')
-
-      [
-        (proj.custom_value_for(cf).value rescue nil),
-        (url_for_project proj.parent),
-        RedmineMessenger.settings[:messenger_url]
-      ].flatten.find(&:present?)
-    end
-
-    def post_private_issues_for_project(proj)
-      return nil if proj.blank?
-
-      cf = ProjectCustomField.find_by_name('Messenger Post private issues')
-      [
-        (proj.custom_value_for(cf).value rescue nil),
-        (post_private_issues_for_project proj.parent),
-        RedmineMessenger.settings[:post_private_issues]
-      ].flatten.find(&:present?)
-    end
-
-    def post_private_notes_for_project(proj)
-      return nil if proj.blank?
-
-      cf = ProjectCustomField.find_by_name('Messenger Post private notes')
-      [
-        (proj.custom_value_for(cf).value rescue nil),
-        (post_private_notes_for_project proj.parent),
-        RedmineMessenger.settings[:post_private_notes]
-      ].flatten.find(&:present?)
-    end
-
-    def channels_for_project(proj)
-      return nil if proj.blank?
-
-      cf = ProjectCustomField.find_by_name('Messenger Channel')
-      val = [
-        (proj.custom_value_for(cf).value rescue nil),
-        (channels_for_project proj.parent),
-        RedmineMessenger.settings[:messenger_channel]
-      ].flatten.find(&:present?)
-
-      # Channel name '-' or empty '' is reserved for NOT notifying
-      return [] if val.nil? || val.to_s == ''
-      return [] if val.to_s == '-'
-      return val.split(',') if val.is_a? String
-      val
-    end
-
-    def detail_to_field(detail)
-      field_format = nil
-
-      if detail.property == 'cf'
-        key = CustomField.find(detail.prop_key).name rescue nil
-        title = key
-        field_format = CustomField.find(detail.prop_key).field_format rescue nil
-      elsif detail.property == 'attachment'
-        key = 'attachment'
-        title = I18n.t :label_attachment
-      else
-        key = detail.prop_key.to_s.sub('_id', '')
-        title = I18n.t "field_#{key}"
-      end
-
-      short = true
-      value = escape detail.value.to_s
-
-      case key
-      when 'title', 'subject', 'description'
-        short = false
-      when 'tracker'
-        tracker = Tracker.find(detail.value) rescue nil
-        value = escape tracker.to_s
-      when 'project'
-        project = Project.find(detail.value) rescue nil
-        value = escape project.to_s
-      when 'status'
-        status = IssueStatus.find(detail.value) rescue nil
-        value = escape status.to_s
-      when 'priority'
-        priority = IssuePriority.find(detail.value) rescue nil
-        value = escape priority.to_s
-      when 'category'
-        category = IssueCategory.find(detail.value) rescue nil
-        value = escape category.to_s
-      when 'assigned_to'
-        user = User.find(detail.value) rescue nil
-        value = escape user.to_s
-      when 'fixed_version'
-        version = Version.find(detail.value) rescue nil
-        value = escape version.to_s
-      when 'attachment'
-        attachment = Attachment.find(detail.prop_key) rescue nil
-        value = "<#{object_url attachment}|#{escape attachment.filename}>" if attachment
-      when 'parent'
-        issue = Issue.find(detail.value) rescue nil
-        value = "<#{object_url issue}|#{escape issue}>" if issue
-      end
-
-      case field_format
-      when 'version'
-        version = Version.find(detail.value) rescue nil
-        value = escape version.to_s
-      end
-
-      value = '-' if value.empty?
-
-      result = { title: title, value: value }
-      result[:short] = true if short
-      result
-    end
-
-    def mentions(text)
-      return nil if text.nil?
-      names = extract_usernames text
-      names.present? ? '\nTo: ' + names.join(', ') : nil
-    end
-
-    def extract_usernames(text = '')
-      text = '' if text.nil?
-
-      # rocketchat usernames may only contain lowercase letters, numbers,
-      # dashes, dots and underscores and must start with a letter or number.
-      text.scan(/@[a-z0-9][a-z0-9_\-.]*/).uniq
     end
   end
 end
