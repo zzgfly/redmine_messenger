@@ -1,0 +1,51 @@
+# Redmine Messenger plugin for Redmine
+
+module RedmineMessenger
+  module Patches
+    module PasswordPatch
+      def self.included(base)
+        base.send(:include, InstanceMethods)
+        base.class_eval do
+          after_create :send_messenger_create
+          after_update :send_messenger_update
+        end
+      end
+
+      module InstanceMethods
+        def send_messenger_create
+          return unless RedmineMessenger.settings[:post_password] == '1'
+          set_language_if_valid Setting.default_language
+
+          channels = Messenger.channels_for_project project
+          url = Messenger.url_for_project project
+
+          return unless channels.present? && url
+          Messenger.speak(l(:label_messenger_password_created,
+                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            url: "<#{Messenger.object_url self}|#{name}>",
+                            user: User.current),
+                          channels, nil, url)
+        end
+
+        def send_messenger_update
+          return unless RedmineMessenger.settings[:post_password_updates] == '1'
+          set_language_if_valid Setting.default_language
+
+          channels = Messenger.channels_for_project project
+          url = Messenger.url_for_project project
+
+          return unless channels.present? && url
+          Messenger.speak(l(:label_messenger_password_updated,
+                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            url: "<#{Messenger.object_url self}|#{name}>",
+                            user: User.current),
+                          channels, nil, url)
+        end
+      end
+    end
+  end
+end
+
+unless Password.included_modules.include? RedmineMessenger::Patches::PasswordPatch
+  Password.send(:include, RedmineMessenger::Patches::PasswordPatch)
+end

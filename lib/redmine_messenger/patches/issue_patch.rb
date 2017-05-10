@@ -7,7 +7,7 @@ module RedmineMessenger
         base.send(:include, InstanceMethods)
         base.class_eval do
           after_create :send_messenger_create
-          after_save :send_messenger_save
+          after_update :send_messenger_update
         end
       end
 
@@ -23,7 +23,9 @@ module RedmineMessenger
           msg = "[#{ERB::Util.html_escape(project)}] #{ERB::Util.html_escape(author)} created <#{Messenger.object_url(self)}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions description if RedmineMessenger.settings[:auto_mentions] == '1'}"
 
           attachment = {}
-          attachment[:text] = ERB::Util.html_escape(description) if description && RedmineMessenger.settings[:new_include_description] == '1'
+          if description && RedmineMessenger.settings[:new_include_description] == '1'
+            attachment[:text] = ERB::Util.html_escape(description)
+          end
           attachment[:fields] = [{
             title: I18n.t(:field_status),
             value: ERB::Util.html_escape(status.to_s),
@@ -49,7 +51,7 @@ module RedmineMessenger
           Messenger.speak msg, channels, attachment, url
         end
 
-        def send_messenger_save
+        def send_messenger_update
           return if current_journal.nil?
 
           channels = Messenger.channels_for_project project
@@ -67,7 +69,8 @@ module RedmineMessenger
           if current_journal.notes && RedmineMessenger.settings[:updated_include_description] == '1'
             attachment[:text] = ERB::Util.html_escape(current_journal.notes)
           end
-          attachment[:fields] = current_journal.details.map { |d| Messenger.detail_to_field d }
+          fields = current_journal.details.map { |d| Messenger.detail_to_field d }
+          attachment[:fields] = fields if fields.any?
 
           Messenger.speak msg, channels, attachment, url
         end
@@ -76,6 +79,6 @@ module RedmineMessenger
   end
 end
 
-unless Issue.included_modules.include? RedmineMessenger::Patches::IssuePatch
-  Issue.send(:include, RedmineMessenger::Patches::IssuePatch)
+unless WikiPage.included_modules.include? RedmineMessenger::Patches::WikiPagePatch
+  WikiPage.send(:include, RedmineMessenger::Patches::WikiPagePatch)
 end

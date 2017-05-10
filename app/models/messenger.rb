@@ -19,7 +19,7 @@ class Messenger
     if RedmineMessenger.settings[:messenger_username].present?
       params[:username] = RedmineMessenger.settings[:messenger_username]
     end
-    params[:attachments] = [attachment] if attachment
+    params[:attachments] = [attachment] if attachment && attachment.any?
 
     if icon.present?
       if icon.start_with? ':'
@@ -36,7 +36,9 @@ class Messenger
         client = HTTPClient.new
         client.ssl_config.cert_store.set_default_paths
         client.ssl_config.ssl_version = :auto
-        client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        if RedmineMessenger.settings[:messenger_verify_ssl] != 1
+          client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
         client.post_async url, payload: params.to_json
       rescue StandardError => e
         Rails.logger.warn("cannot connect to #{url}")

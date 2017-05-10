@@ -49,30 +49,5 @@ module RedmineMessenger
 
       Messenger.speak msg, channels, attachment, url
     end
-
-    def controller_wiki_edit_after_save(context = {})
-      return unless RedmineMessenger.settings[:post_wiki_updates] == '1'
-
-      project = context[:project]
-      page = context[:page]
-
-      user = page.content.author
-      project_url = "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>"
-      page_url = "<#{Messenger.object_url page}|#{page.title}>"
-      comment = "[#{project_url}] #{page_url} updated by *#{user}*"
-
-      channels = Messenger.channels_for_project project
-      url = Messenger.url_for_project project
-
-      return unless channels.present? && url
-
-      attachment = nil
-      unless page.content.comments.empty?
-        attachment = {}
-        attachment[:text] = "#{ERB::Util.html_escape(page.content.comments)}"
-      end
-
-      Messenger.speak comment, channels, attachment, url
-    end
   end
 end

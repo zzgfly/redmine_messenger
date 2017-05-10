@@ -1,16 +1,31 @@
 # English strings
 en:
-  label_settings_messenger_channel: Messenger Channel
-  label_settings_messenger_username: Messenger username
-  label_settings_messenger_url: Messenger URL
-  label_settings_messenger_icon: Messenger Icon
-  messenger_channel_info_html: 'The channel can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Rocket.Chat Channel">project custom field</a> named "Messenger Channel" (without quotes).'
-  messenger_url_info_html: 'Generate an "Incoming WebHook" URL from the <a href="https://rocket.chat/docs/administrator-guides/integrations/">Integrations configuration page on Rocket.Chat</a>. This URL can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Messenger Channel">project custom field</a> named "Messenger URL" (without quotes).'
   label_settings_auto_mentions: Convert names to mentions?
   label_settings_display_watchers: Display watchers?
-  label_settings_post_updates: Post issue updates?
+  label_settings_messenger_channel: Messenger Channel
+  label_settings_messenger_icon: Messenger Icon
+  label_settings_messenger_url: Messenger URL
+  label_settings_messenger_username: Messenger username
   label_settings_new_include_description: Description in new issue?
-  label_settings_updated_include_description: Description in update issue?
   label_settings_post_private_issues: Post updates for private issues?
   label_settings_post_private_notes: Post private notes?
+  label_settings_post_updates: Post issue updates?
   label_settings_post_wiki_updates: Post Wiki updates?
+  label_settings_post_wiki: Post Wiki added?
+  label_settings_updated_include_description: Description in update issue?
+  messenger_channel_info_html: 'The channel can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Rocket.Chat Channel">project custom field</a> named "Messenger Channel" (without quotes).'
+  messenger_url_info_html: 'Generate an <a target="_blank" href="https://github.com/AlphaNodes/redmine_messenger#prepare-your-messenger-service">Incoming WebHook</a> URL from the sessenger service. This URL can be changed on a per-project basis by creating a <a href="/custom_fields/new?type=ProjectCustomField&custom_field[name]=Messenger Channel">project custom field</a> named "Messenger URL" (without quotes).'
+  label_settings_messenger_verify_ssl: Verify SSL
+  messenger_verify_ssl_info_html: 'If your Messenger service uses an invalid or self-signed SSL certificate, disable it.'
+  label_settings_post_db: DB entry added?
+  label_settings_post_db_updates: DB entry updates?
+  label_settings_post_contact: Contact added?
+  label_settings_post_contact_updates: Contact updates?
+  label_settings_post_password: Password added?
+  label_settings_post_password_updates: Password updates?
+  label_messenger_db_entry_created: "[%{project_url}] DB entry %{url} created by *%{user}*"
+  label_messenger_db_entry_updated: "[%{project_url}] DB entry %{url} updated by *%{user}*"
+  label_messenger_contact_created: "[%{project_url}] Contact %{url} created by *%{user}*"
+  label_messenger_contact_updated: "[%{project_url}] Contact %{url} updated by *%{user}*"
+  label_messenger_password_created: "[%{project_url}] Kennwort %{url} created by *%{user}*"
+  label_messenger_password_updated: "[%{project_url}] Kennwort %{url} updated by *%{user}*"

@@ -21,9 +21,20 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:label_settings_messenger_verify_ssl)) %>
+  <%= check_box_tag 'settings[messenger_verify_ssl]', 1, @settings[:messenger_verify_ssl] %>
+  <em class="info"><%= t(:messenger_verify_ssl_info_html) %></em>
+</p>
+
+<br />
+<h3><%= l(:label_issue_plural) %></h3>
+
+
+<p>
   <%= content_tag(:label, l(:label_settings_auto_mentions)) %>
   <%= check_box_tag 'settings[auto_mentions]', 1, @settings[:auto_mentions] %>
 </p>
+
 <p>
   <%= content_tag(:label, l(:label_settings_display_watchers)) %>
   <%= check_box_tag 'settings[display_watchers]', 1, @settings[:display_watchers] %>
@@ -48,7 +59,57 @@
   <%= content_tag(:label, l(:label_settings_post_private_notes)) %>
   <%= check_box_tag 'settings[post_private_notes]', 1, @settings[:post_private_notes] %>
 </p>
+
+<br />
+<h3><%= l(:label_wiki) %></h3>
+
+<p>
+  <%= content_tag(:label, l(:label_settings_post_wiki)) %>
+  <%= check_box_tag 'settings[post_wiki]', 1, @settings[:post_wiki] %>
+</p>
 <p>
   <%= content_tag(:label, l(:label_settings_post_wiki_updates)) %>
   <%= check_box_tag 'settings[post_wiki_updates]', 1, @settings[:post_wiki_updates] %>
 </p>
+
+<% if RedmineReporting::REDMINE_DB_SUPPORT %>
+<br />
+<h3><%= l(:label_db_entry_plural) %></h3>
+
+<p>
+  <%= content_tag(:label, l(:label_settings_post_db)) %>
+  <%= check_box_tag 'settings[post_db]', 1, @settings[:post_db] %>
+</p>
+<p>
+  <%= content_tag(:label, l(:label_settings_post_db_updates)) %>
+  <%= check_box_tag 'settings[post_db_updates]', 1, @settings[:post_db_updates] %>
+</p>
+<% end %>
+
+<% if RedmineReporting::REDMINE_CONTACTS_SUPPORT %>
+<br />
+<h3><%= l(:label_contact_plural) %></h3>
+
+<p>
+  <%= content_tag(:label, l(:label_settings_post_contact)) %>
+  <%= check_box_tag 'settings[post_contact]', 1, @settings[:post_contact] %>
+</p>
+<p>
+  <%= content_tag(:label, l(:label_settings_post_contact_updates)) %>
+  <%= check_box_tag 'settings[post_contact_updates]', 1, @settings[:post_contact_updates] %>
+</p>
+<% end %>
+
+<% if RedmineReporting::REDMINE_PASSWORDS_SUPPORT %>
+<br />
+<h3><%= l(:label_password_plural) %></h3>
+
+<p>
+  <%= content_tag(:label, l(:label_settings_post_password)) %>
+  <%= check_box_tag 'settings[post_password]', 1, @settings[:post_password] %>
+</p>
+<p>
+  <%= content_tag(:label, l(:label_settings_post_password_updates)) %>
+  <%= check_box_tag 'settings[post_password_updates]', 1, @settings[:post_password_updates] %>
+</p>
+<% end %>
