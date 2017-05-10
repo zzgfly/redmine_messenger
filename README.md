@@ -2,7 +2,9 @@
 
 This plugin posts updates to issues in your Redmine installation to [Slack](https://slack.com/), [Rocket.Chat](https://rocket.chat/) or [Mattermost](https://about.mattermost.com/) channel.
 
-Redmine Supported versions: 3.0.x.
+[![Dependency Status](https://gemnasium.com/badges/github.com/AlphaNodes/redmine_messenger.svg)](https://gemnasium.com/github.com/AlphaNodes/redmine_messenger)
+
+[![Build Status](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger/badge/icon)](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger)
 
 ## Screenshot
 
@@ -26,7 +28,14 @@ Go to Mattermost documentation [Incoming Webhooks](https://docs.mattermost.com/d
 
 ### Rocket.Chat
 
-Go to Rocket.Chat documentation [Rocket.Chat](https://rocket.chat/docs/administrator-guides/integrations/) for more information to set up Incoming WebHook
+Go to Rocket.Chat documentation [Incoming WebHook Scripting](https://rocket.chat/docs/administrator-guides/integrations/) for more information to set up Incoming WebHook
+
+
+## Requirements
+
+* Redmine version >= 3.0.0
+* Ruby version >= 2.1.5
+
 
 ## Installation
 

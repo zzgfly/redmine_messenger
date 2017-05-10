@@ -71,7 +71,7 @@ class Messenger
   def self.post_private_issues_for_project(proj)
     return nil if proj.blank?
 
-    cf = ProjectCustomField.find_by_name('Messenger Post private issues')
+    cf = ProjectCustomField.find_by(name: 'Messenger Post private issues')
     [
       (proj.custom_value_for(cf).value rescue nil),
       (post_private_issues_for_project proj.parent),
@@ -82,7 +82,7 @@ class Messenger
   def self.post_private_notes_for_project(proj)
     return nil if proj.blank?
 
-    cf = ProjectCustomField.find_by_name('Messenger Post private notes')
+    cf = ProjectCustomField.find_by(name: 'Messenger Post private notes')
     [
       (proj.custom_value_for(cf).value rescue nil),
       (post_private_notes_for_project proj.parent),
@@ -109,6 +109,8 @@ class Messenger
 
   def self.detail_to_field(detail)
     field_format = nil
+    key = nil
+    escape = yes
 
     if detail.property == 'cf'
       key = CustomField.find(detail.prop_key).name rescue nil
@@ -123,47 +125,56 @@ class Messenger
     end
 
     short = true
-    value = ERB::Util.html_escape(detail.value.to_s)
+    value = detail.value.to_s
 
     case key
     when 'title', 'subject', 'description'
       short = false
     when 'tracker'
-      tracker = Tracker.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(tracker.to_s)
+      tracker = Tracker.find(detail.value)
+      value = tracker.to_s if tracker.present?
     when 'project'
-      project = Project.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(project.to_s)
+      project = Project.find(detail.value)
+      value = project.to_s if project.present?
     when 'status'
-      status = IssueStatus.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(status.to_s)
+      status = IssueStatus.find(detail.value)
+      value = status.to_s if status.present?
     when 'priority'
-      priority = IssuePriority.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(priority.to_s)
+      priority = IssuePriority.find(detail.value)
+      value = priority.to_s if priority.present?
     when 'category'
-      category = IssueCategory.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(category.to_s)
+      category = IssueCategory.find(detail.value)
+      value = category.to_s if category.present?
     when 'assigned_to'
-      user = User.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(user.to_s)
+      user = User.find(detail.value)
+      value = user.to_s if user.present?
     when 'fixed_version'
-      version = Version.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(version.to_s)
+      fixed_version = Version.find(detail.value)
+      value = fixed_version.to_s if fixed_version.present?
     when 'attachment'
-      attachment = Attachment.find(detail.prop_key) rescue nil
-      value = "<#{Messenger.object_url attachment}|#{ERB::Util.html_escape(attachment.filename)}>" if attachment
+      attachment = Attachment.find(detail.prop_key)
+      value = "<#{Messenger.object_url attachment}|#{ERB::Util.html_escape(attachment.filename)}>" if attachment.present?
+      escape = no
     when 'parent'
-      issue = Issue.find(detail.value) rescue nil
-      value = "<#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>" if issue
+      issue = Issue.find(detail.value)
+      value = "<#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>" if issue.present?
+      escape = no
     end
 
-    case field_format
-    when 'version'
-      version = Version.find(detail.value) rescue nil
-      value = ERB::Util.html_escape(version.to_s)
+    if detail.property == 'cf' && field_format == 'version'
+      version = Version.find(detail.value)
+      value = version.to_s if version.present?
     end
 
-    value = '-' if value.empty?
+    value = if value.present?
+              if escape
+                ERB::Util.html_escape(value)
+              else
+                value
+              end
+            else
+              '-'
+            end
 
     result = { title: title, value: value }
     result[:short] = true if short
