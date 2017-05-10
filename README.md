@@ -4,7 +4,7 @@ This plugin posts updates to issues in your Redmine installation to [Slack](http
 
 [![Dependency Status](https://gemnasium.com/badges/github.com/AlphaNodes/redmine_messenger.svg)](https://gemnasium.com/github.com/AlphaNodes/redmine_messenger)
 
-[![Build Status](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger/badge/icon)](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger)
+[![Build Status](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger/badge/icon)](https://pm.alphanodes.com/jenkins/job/Devel-build-redmine-messenger) ![Jenkins Build Status](https://pm.alphanodes.com/jenkins/buildStatus/icon?job=Devel-build-redmine-messenger)
 
 ## Screenshot
 
