@@ -23,7 +23,7 @@ module RedmineMessenger
           set_language_if_valid Setting.default_language
 
           attachment = {}
-          if description && RedmineMessenger.settings[:new_include_description] == '1'
+          if description.present? && RedmineMessenger.settings[:new_include_description] == '1'
             attachment[:text] = ERB::Util.html_escape(description)
           end
           attachment[:fields] = [{
@@ -70,7 +70,8 @@ module RedmineMessenger
           set_language_if_valid Setting.default_language
 
           attachment = {}
-          if current_journal.notes && RedmineMessenger.settings[:updated_include_description] == '1'
+          if current_journal.notes.present? &&
+             RedmineMessenger.settings[:updated_include_description] == '1'
             attachment[:text] = ERB::Util.html_escape(current_journal.notes)
           end
           fields = current_journal.details.map { |d| Messenger.detail_to_field d }
