@@ -119,7 +119,7 @@ class Messenger
   def self.detail_to_field(detail)
     field_format = nil
     key = nil
-    escape = yes
+    escape = true
 
     if detail.property == 'cf'
       key = CustomField.find(detail.prop_key).name rescue nil
@@ -167,11 +167,11 @@ class Messenger
     when 'attachment'
       attachment = Attachment.find(detail.prop_key)
       value = "<#{Messenger.object_url attachment}|#{ERB::Util.html_escape(attachment.filename)}>" if attachment.present?
-      escape = no
+      escape = false
     when 'parent'
       issue = Issue.find(detail.value)
       value = "<#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>" if issue.present?
-      escape = no
+      escape = false
     end
 
     if detail.property == 'cf' && field_format == 'version'
