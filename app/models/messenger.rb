@@ -1,5 +1,5 @@
 # Redmine Messenger plugin for Redmine
-require 'httpclient'
+require 'net/http'
 
 class Messenger
   include Redmine::I18n
@@ -30,16 +30,23 @@ class Messenger
     end
 
     channels.each do |channel|
+      uri = URI(url)
       params[:channel] = channel
 
+      http_options = { use_ssl: uri.scheme == 'https' }
+      if RedmineMessenger.settings[:messenger_verify_ssl] != 1
+        http_options[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
+      end
+
       begin
-        client = HTTPClient.new
-        client.ssl_config.cert_store.set_default_paths
-        client.ssl_config.ssl_version = :auto
-        if RedmineMessenger.settings[:messenger_verify_ssl] != 1
-          client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        req = Net::HTTP::Post.new(uri)
+        req.set_form_data(payload: params.to_json)
+        Net::HTTP.start(uri.hostname, uri.port, http_options) do |http|
+          response = http.request(req)
+          unless response == Net::HTTPSuccess || response == Net::HTTPRedirection
+            Rails.logger.warn(response)
+          end
         end
-        client.post_async url, payload: params.to_json
       rescue StandardError => e
         Rails.logger.warn("cannot connect to #{url}")
         Rails.logger.warn(e)

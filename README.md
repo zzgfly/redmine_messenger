@@ -41,7 +41,6 @@ Install ``redmine_messenger`` plugin for `Redmine`
 
     cd $REDMINE_ROOT
     git clone git://github.com/alphanodes/redmine_messenger.git plugins/redmine_messenger
-    bundle install --without development test
 
 Restart Redmine, and you should see the plugin show up in the Plugins page.
 Under the configuration options, set the Messenger API URL to the URL for an

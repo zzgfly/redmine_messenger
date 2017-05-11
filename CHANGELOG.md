@@ -9,8 +9,9 @@ Changelog
 * Contact added/updated supported for notification (if redmine_contacts is installed)
 * Password added/updated supported for notification (if redmine_passwords is installed)
 * DB entry added/updated supported for notification (if redmine_db is installed)
-* SSL verify can be disabled 
+* SSL verify can be disabled
 * Lots of refactoring and code cleanups
+* Swith from httpclient to net/http
 
 ## v0.6.1
 
