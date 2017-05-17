@@ -72,7 +72,7 @@
   <%= check_box_tag 'settings[post_wiki_updates]', 1, @settings[:post_wiki_updates] %>
 </p>
 
-<% if RedmineReporting::REDMINE_DB_SUPPORT %>
+<% if RedmineMessenger::REDMINE_DB_SUPPORT %>
 <br />
 <h3><%= l(:label_db_entry_plural) %></h3>
 
@@ -86,7 +86,7 @@
 </p>
 <% end %>
 
-<% if RedmineReporting::REDMINE_CONTACTS_SUPPORT %>
+<% if RedmineMessenger::REDMINE_CONTACTS_SUPPORT %>
 <br />
 <h3><%= l(:label_contact_plural) %></h3>
 
@@ -100,7 +100,7 @@
 </p>
 <% end %>
 
-<% if RedmineReporting::REDMINE_PASSWORDS_SUPPORT %>
+<% if RedmineMessenger::REDMINE_PASSWORDS_SUPPORT %>
 <br />
 <h3><%= l(:label_password_plural) %></h3>
 
