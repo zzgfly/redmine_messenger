@@ -22,7 +22,7 @@ Go to Slack documentation [Incoming Webhooks](https://api.slack.com/incoming-web
 
 ### Mattermost
 
-Go to Mattermost documentation [Incoming Webhooks](https://docs.mattermost.com/developer/webhooks-incoming.) for more information to set up Incoming WebHook
+Go to Mattermost documentation [Incoming Webhooks](https://docs.mattermost.com/developer/webhooks-incoming.html) for more information to set up Incoming WebHook
 
 ### Rocket.Chat
 
