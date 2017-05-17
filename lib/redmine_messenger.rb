@@ -11,14 +11,14 @@ Rails.configuration.to_prepare do
 
   # Hooks
   require_dependency 'redmine_messenger/hooks'
+end
 
-  module RedmineMessenger
-    REDMINE_CONTACTS_SUPPORT = Redmine::Plugin.installed?('redmine_contacts') ? true : false
-    REDMINE_DB_SUPPORT = Redmine::Plugin.installed?('redmine_db') ? true : false
-    REDMINE_PASSWORDS_SUPPORT = Redmine::Plugin.installed?('redmine_passwords') ? true : false
+module RedmineMessenger
+  REDMINE_CONTACTS_SUPPORT = Redmine::Plugin.installed?('redmine_contacts') ? true : false
+  REDMINE_DB_SUPPORT = Redmine::Plugin.installed?('redmine_db') ? true : false
+  REDMINE_PASSWORDS_SUPPORT = Redmine::Plugin.installed?('redmine_passwords') ? true : false
 
-    def self.settings
-      Setting[:plugin_redmine_messenger].blank? ? {} : Setting[:plugin_redmine_messenger]
-    end
+  def self.settings
+    Setting[:plugin_redmine_messenger].blank? ? {} : Setting[:plugin_redmine_messenger]
   end
 end
