@@ -32,7 +32,6 @@ class Messenger
     channels.each do |channel|
       uri = URI(url)
       params[:channel] = channel
-
       http_options = { use_ssl: uri.scheme == 'https' }
       if RedmineMessenger.settings[:messenger_verify_ssl] != 1
         http_options[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
@@ -43,7 +42,7 @@ class Messenger
         req.set_form_data(payload: params.to_json)
         Net::HTTP.start(uri.hostname, uri.port, http_options) do |http|
           response = http.request(req)
-          unless response == Net::HTTPSuccess || response == Net::HTTPRedirection
+          unless [Net::HTTPSuccess, Net::HTTPRedirection, Net::HTTPOK].include? response
             Rails.logger.warn(response)
           end
         end
@@ -66,54 +65,49 @@ class Messenger
   end
 
   def self.url_for_project(proj)
-    return nil if proj.blank?
-
-    cf = ProjectCustomField.find_by(name: 'Messenger URL')
-
-    [
-      (proj.custom_value_for(cf).value rescue nil),
-      (url_for_project proj.parent),
-      RedmineMessenger.settings[:messenger_url]
-    ].flatten.find(&:present?)
-  end
-
-  def self.post_private_issues_for_project(proj)
-    return nil if proj.blank?
-
-    cf = ProjectCustomField.find_by(name: 'Messenger Post private issues')
-    [
-      (proj.custom_value_for(cf).value rescue nil),
-      (post_private_issues_for_project proj.parent),
-      RedmineMessenger.settings[:post_private_issues]
-    ].flatten.find(&:present?)
-  end
-
-  def self.post_private_notes_for_project(proj)
-    return nil if proj.blank?
-
-    cf = ProjectCustomField.find_by(name: 'Messenger Post private notes')
-    [
-      (proj.custom_value_for(cf).value rescue nil),
-      (post_private_notes_for_project proj.parent),
-      RedmineMessenger.settings[:post_private_notes]
-    ].flatten.find(&:present?)
+    return if proj.blank?
+    # project based
+    pm = MessengerSetting.find_by(project_id: proj.id)
+    return pm.messenger_url if !pm.nil? && pm.messenger_url.present?
+    # parent project based
+    parent_url = url_for_project(proj.parent)
+    return parent_url if parent_url.present?
+    # system based
+    return RedmineMessenger.settings[:messenger_url] if RedmineMessenger.settings[:messenger_url].present?
+    nil
   end
 
   def self.channels_for_project(proj)
-    return if proj.blank?
+    return [] if proj.blank?
+    # project based
+    pm = MessengerSetting.find_by(project_id: proj.id)
+    if !pm.nil? && pm.messenger_channel.present?
+      return [] if pm.messenger_channel == '-'
+      return pm.messenger_channel.split(',').map(&:strip).uniq
+    end
+    # parent project based
+    parent_channel = channels_for_project(proj.parent)
+    return parent_channel if parent_channel.present?
+    # system based
+    if RedmineMessenger.settings[:messenger_channel].present? &&
+       RedmineMessenger.settings[:messenger_channel] != '-'
+      return RedmineMessenger.settings[:messenger_channel].split(',').map(&:strip).uniq
+    end
+    []
+  end
 
-    cf = ProjectCustomField.find_by(name: 'Messenger Channel')
-    val = [
-      (proj.custom_value_for(cf).value rescue nil),
-      (channels_for_project proj.parent),
-      RedmineMessenger.settings[:messenger_channel]
-    ].flatten.find(&:present?)
-
-    # Channel name '-' or empty '' is reserved for NOT notifying
-    return [] if val.nil? || val.to_s == ''
-    return [] if val.to_s == '-'
-    return val.split(',') if val.is_a? String
-    val
+  def self.setting_for_project(proj, config)
+    return false if proj.blank?
+    # project based
+    pm = MessengerSetting.find_by(project_id: proj.id)
+    unless pm.nil?
+      return false if pm.send(config) == 1
+      return true if pm.send(config) == 2
+      # 0 = use system based settings
+    end
+    # system based
+    return true if RedmineMessenger.settings[config].present? && RedmineMessenger.settings[config] == '1'
+    false
   end
 
   def self.detail_to_field(detail)

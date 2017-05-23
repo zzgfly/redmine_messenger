@@ -1,9 +1,12 @@
 # Redmine Messenger plugin for Redmine
 
 Rails.configuration.to_prepare do
+  require_dependency 'projects_helper'
+
   # Patches
   require_dependency 'redmine_messenger/patches/issue_patch'
   require_dependency 'redmine_messenger/patches/wiki_page_patch'
+  require_dependency 'redmine_messenger/patches/projects_helper_patch'
 
   require 'redmine_messenger/patches/contact_patch' if RedmineMessenger::REDMINE_CONTACTS_SUPPORT
   require 'redmine_messenger/patches/db_entry_patch' if RedmineMessenger::REDMINE_DB_SUPPORT

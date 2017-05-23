@@ -15,15 +15,14 @@ module RedmineMessenger
         def send_messenger_create
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
-          post_private_issues = Messenger.post_private_issues_for_project(project)
 
           return unless channels.present? && url
-          return if is_private? && post_private_issues != '1'
+          return if is_private? && !Messenger.setting_for_project(project, :post_private_issues)
 
           set_language_if_valid Setting.default_language
 
           attachment = {}
-          if description.present? && RedmineMessenger.settings[:new_include_description] == '1'
+          if description.present? && Messenger.setting_for_project(project, :new_include_description)
             attachment[:text] = ERB::Util.html_escape(description)
           end
           attachment[:fields] = [{
@@ -49,7 +48,7 @@ module RedmineMessenger
           end
 
           Messenger.speak(l(:label_messenger_issue_created,
-                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url(self)}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions description if RedmineMessenger.settings[:auto_mentions] == '1'}",
                             user: author),
                           channels, attachment, url)
@@ -60,26 +59,23 @@ module RedmineMessenger
 
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
-          post_private_issues = Messenger.post_private_issues_for_project(project)
-          post_private_notes = Messenger.post_private_notes_for_project(project)
 
-          return unless channels.present? && url && RedmineMessenger.settings[:post_updates] == '1'
-          return if is_private? && post_private_issues != '1'
-          return if current_journal.private_notes? && post_private_notes != '1'
+          return unless channels.present? && url && Messenger.setting_for_project(project, :post_updates)
+          return if is_private? && !Messenger.setting_for_project(project, :post_private_issues)
+          return if current_journal.private_notes? && !Messenger.setting_for_project(project, :post_private_notes)
 
           set_language_if_valid Setting.default_language
 
           attachment = {}
-          if current_journal.notes.present? &&
-             RedmineMessenger.settings[:updated_include_description] == '1'
+          if current_journal.notes.present? && Messenger.setting_for_project(project, :updated_include_description)
             attachment[:text] = ERB::Util.html_escape(current_journal.notes)
           end
           fields = current_journal.details.map { |d| Messenger.detail_to_field d }
           attachment[:fields] = fields if fields.any?
 
           Messenger.speak(l(:label_messenger_issue_updated,
-                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
-                            url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions current_journal.notes if RedmineMessenger.settings[:auto_mentions] == '1'}",
+                            project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
+                            url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions(current_journal.notes) if Messenger.setting_for_project(project, :auto_mentions)}",
                             user: current_journal.user),
                           channels, attachment, url)
         end

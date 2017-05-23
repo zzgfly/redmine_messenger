@@ -1,0 +1,4 @@
+<p>
+  <%= f.text_field mf, size: size, label: l("label_settings_#{mf}") %>
+  <em class="info"><%= l(:label_messenger_project_text_field_info) %> (<%= l(:label_default) %>: <%= RedmineMessenger.settings[mf] %>)</em>
+</p>

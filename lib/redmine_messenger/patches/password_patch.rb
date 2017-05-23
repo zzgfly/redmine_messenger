@@ -13,7 +13,7 @@ module RedmineMessenger
 
       module InstanceMethods
         def send_messenger_create
-          return unless RedmineMessenger.settings[:post_password] == '1'
+          return unless Messenger.setting_for_project(project, :post_password)
           set_language_if_valid Setting.default_language
 
           channels = Messenger.channels_for_project project
@@ -21,14 +21,14 @@ module RedmineMessenger
 
           return unless channels.present? && url
           Messenger.speak(l(:label_messenger_password_created,
-                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url self}|#{name}>",
                             user: User.current),
                           channels, nil, url)
         end
 
         def send_messenger_update
-          return unless RedmineMessenger.settings[:post_password_updates] == '1'
+          return unless Messenger.setting_for_project(project, :post_password_updates)
           set_language_if_valid Setting.default_language
 
           channels = Messenger.channels_for_project project
@@ -36,7 +36,7 @@ module RedmineMessenger
 
           return unless channels.present? && url
           Messenger.speak(l(:label_messenger_password_updated,
-                            project_url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(project)}>",
+                            project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url self}|#{name}>",
                             user: User.current),
                           channels, nil, url)

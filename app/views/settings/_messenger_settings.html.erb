@@ -1,3 +1,5 @@
+<div class="info"><%= t(:messenger_settings_intro) %></div><br />
+
 <p>
   <%= content_tag(:label, l(:label_settings_messenger_url)) %>
   <%= text_field_tag('settings[messenger_url]', @settings[:messenger_url], size: 60, placeholder: 'https://rocket.chat/hooks/my_rocket_chat_token') %>
@@ -29,6 +31,7 @@
 <br />
 <h3><%= l(:label_issue_plural) %></h3>
 
+<div class="info"><%= t(:messenger_issue_intro) %></div><br />
 
 <p>
   <%= content_tag(:label, l(:label_settings_auto_mentions)) %>
@@ -63,6 +66,8 @@
 <br />
 <h3><%= l(:label_wiki) %></h3>
 
+<div class="info"><%= t(:messenger_wiki_intro) %></div><br />
+
 <p>
   <%= content_tag(:label, l(:label_settings_post_wiki)) %>
   <%= check_box_tag 'settings[post_wiki]', 1, @settings[:post_wiki] %>
@@ -75,6 +80,8 @@
 <% if RedmineMessenger::REDMINE_DB_SUPPORT %>
 <br />
 <h3><%= l(:label_db_entry_plural) %></h3>
+
+<div class="info"><%= t(:messenger_db_intro) %></div><br />
 
 <p>
   <%= content_tag(:label, l(:label_settings_post_db)) %>
@@ -90,6 +97,8 @@
 <br />
 <h3><%= l(:label_contact_plural) %></h3>
 
+<div class="info"><%= t(:messenger_contacts_intro) %></div><br />
+
 <p>
   <%= content_tag(:label, l(:label_settings_post_contact)) %>
   <%= check_box_tag 'settings[post_contact]', 1, @settings[:post_contact] %>
@@ -103,6 +112,8 @@
 <% if RedmineMessenger::REDMINE_PASSWORDS_SUPPORT %>
 <br />
 <h3><%= l(:label_password_plural) %></h3>
+
+<div class="info"><%= t(:messenger_passwords_intro) %></div><br />
 
 <p>
   <%= content_tag(:label, l(:label_settings_post_password)) %>

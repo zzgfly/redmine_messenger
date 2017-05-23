@@ -41,14 +41,27 @@ Install ``redmine_messenger`` plugin for `Redmine`
 
     cd $REDMINE_ROOT
     git clone git://github.com/alphanodes/redmine_messenger.git plugins/redmine_messenger
+    bundle exec rake db:migrate_plugins
 
-Restart Redmine, and you should see the plugin show up in the Plugins page.
+Restart Redmine (application server) and you should see the plugin show up in the Plugins page.
 Under the configuration options, set the Messenger API URL to the URL for an
 Incoming WebHook integration in your Messenger account and also set the Messenger
 Channel to the channel's handle (be careful, this is not the channel's display name
 visible to users, you can find each channel's handle by navigating inside the channel
 and clicking the down-arrow and selecting view info). See also the next two sections
 for advanced and custom routing options.
+
+
+## Uninstall
+
+Uninstall ``redmine_messenger``
+
+    cd $REDMINE_ROOT
+    bundle exec rake db:migrate_plugins NAME=redmine_messenger VERSION=0
+    rm -rf plugins/redmine_messenger
+
+Restart Redmine (application server)
+
 
 ## Customized Routing
 

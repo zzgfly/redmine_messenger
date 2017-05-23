@@ -9,10 +9,9 @@ module RedmineMessenger
 
       channels = Messenger.channels_for_project issue.project
       url = Messenger.url_for_project issue.project
-      post_private_issues = Messenger.post_private_issues_for_project(issue.project)
 
       return unless channels.present? && url && issue.save
-      return if issue.is_private? && post_private_issues != '1'
+      return if issue.is_private? && !Messenger.setting_for_project(project, :post_private_issues)
 
       msg = "[#{ERB::Util.html_escape(issue.project)}] #{ERB::Util.html_escape(journal.user.to_s)} updated <#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>"
 

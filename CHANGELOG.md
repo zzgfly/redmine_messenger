@@ -3,7 +3,7 @@ Changelog
 
 ##  0.9.9
 
-* Fork of redmine_rocketchat, redmine_slack and redmine_mattermost (base functions for all three messenger)
+* All global messenger settings can be overwritten project based
 * Locale support added
 * Wiki added supported for notification
 * Contact added/updated supported for notification (if redmine_contacts is installed)
@@ -12,6 +12,7 @@ Changelog
 * SSL verify can be disabled
 * Lots of refactoring and code cleanups
 * Swith from httpclient to net/http
+* Fork of redmine_rocketchat, redmine_slack and redmine_mattermost (base functions for all three messenger)
 
 ## v0.6.1
 

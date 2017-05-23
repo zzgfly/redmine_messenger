@@ -1,3 +1,5 @@
+# Redmine Messenger plugin for Redmine
+
 require 'redmine'
 require 'redmine_messenger'
 
@@ -11,14 +13,16 @@ Redmine::Plugin.register :redmine_messenger do
 
   requires_redmine version_or_higher: '3.0.0'
 
+  permission :manage_messenger, projects: :settings, messenger_settings: :save
+
   settings default: {
     messenger_url: '',
-    messenger_channel: 'redmine',
     messenger_icon: 'https://raw.githubusercontent.com/alphanodes/redmine_messenger/master/assets/images/icon.png',
+    messenger_channel: 'redmine',
     messenger_username: 'robot',
     messenger_verify_ssl: '1',
-    display_watchers: '0',
     auto_mentions: '1',
+    display_watchers: '0',
     post_updates: '1',
     new_include_description: '1',
     updated_include_description: '1',
