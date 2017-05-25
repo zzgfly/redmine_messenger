@@ -4,6 +4,21 @@ This plugin posts updates to issues in your Redmine installation to [Slack](http
 
 [![Dependency Status](https://gemnasium.com/badges/github.com/AlphaNodes/redmine_messenger.svg)](https://gemnasium.com/github.com/AlphaNodes/redmine_messenger) ![Jenkins Build Status](https://pm.alphanodes.com/jenkins/buildStatus/icon?job=Devel-build-redmine-messenger)
 
+## Features
+
+* Post information to messenger channel
+  * post issue updates
+  * post private issue updates
+  * display watchers
+  * convert username to mentions
+  * post wiki updates
+  * post db entry (if redmine_db is installed) updates
+  * post password (if redmine_passwords is installed) updates
+  * post contact (if redmine_contacts is installed) updates
+* overwrite messenger settings at project level
+* parent project support (inherit messenger settings from parent project)
+* multiple channel support (define one or more channels to deliver note)
+
 ## Screenshot
 
 Mattermost output:
@@ -62,16 +77,6 @@ Uninstall ``redmine_messenger``
 
 Restart Redmine (application server)
 
-
-## Customized Routing
-
-You can also route messages to different channels on a per-project basis. To
-do this, create a project custom field (Administration > Custom fields > Project)
-named `Messenger Channel`. If no custom channel is defined for a project, the parent
-project will be checked (or the default will be used). To prevent all notifications
-from being sent for a project, set the custom channel to `-`.
-
-For more information, see [https://www.redmine.org/projects/redmine/wiki/Plugins](https://www.redmine.org/projects/redmine/wiki/Plugins) (see also next section for an easy configuration demonstration).
 
 ## Credits
 

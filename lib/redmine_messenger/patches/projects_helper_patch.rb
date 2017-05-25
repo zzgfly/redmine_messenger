@@ -32,7 +32,7 @@ module RedmineMessenger
         end
 
         def project_setting_messenger_default_value(value)
-          if RedmineMessenger.settings[value] == '1'
+          if Messenger.default_project_setting(@project, value)
             l(:label_messenger_settings_enabled)
           else
             l(:label_messenger_settings_disabled)

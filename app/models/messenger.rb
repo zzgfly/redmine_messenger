@@ -98,12 +98,27 @@ class Messenger
 
   def self.setting_for_project(proj, config)
     return false if proj.blank?
+    @setting_found = 0
     # project based
     pm = MessengerSetting.find_by(project_id: proj.id)
-    unless pm.nil?
+    unless pm.nil? || pm.send(config).zero?
+      @setting_found = 1
       return false if pm.send(config) == 1
       return true if pm.send(config) == 2
       # 0 = use system based settings
+    end
+    # parent project based
+    parent_setting = setting_for_project(proj.parent, config)
+    return parent_setting if @setting_found == 1
+    # system based
+    return true if RedmineMessenger.settings[config].present? && RedmineMessenger.settings[config] == '1'
+    false
+  end
+
+  def self.default_project_setting(proj, config)
+    if proj.present? && proj.parent.present?
+      parent_setting = setting_for_project(proj.parent, config)
+      return parent_setting if @setting_found == 1
     end
     # system based
     return true if RedmineMessenger.settings[config].present? && RedmineMessenger.settings[config] == '1'
