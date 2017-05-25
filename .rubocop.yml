@@ -1,6 +1,9 @@
 Rails:
   Enabled: true
 
+Rails/ApplicationRecord:
+  Enabled: false
+
 AllCops:
   TargetRubyVersion: 2.1
 
