@@ -12,6 +12,9 @@ Rails.configuration.to_prepare do
   require 'redmine_messenger/patches/db_entry_patch' if RedmineMessenger::REDMINE_DB_SUPPORT
   require 'redmine_messenger/patches/password_patch' if RedmineMessenger::REDMINE_PASSWORDS_SUPPORT
 
+  # Global helpers
+  require_dependency 'redmine_messenger/helpers'
+
   # Hooks
   require_dependency 'redmine_messenger/hooks'
 end
