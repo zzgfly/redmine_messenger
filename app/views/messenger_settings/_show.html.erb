@@ -43,7 +43,7 @@
       <%= render partial: 'messenger_settings/messenger_select', locals: { f: f, mf: :post_wiki } %>
       <%= render partial: 'messenger_settings/messenger_select', locals: { f: f, mf: :post_wiki_updates } %>
 
-      <% if RedmineMessenger::REDMINE_DB_SUPPORT %>
+      <% if RedmineMessenger::REDMINE_DB_SUPPORT && User.current.allowed_to?(:view_db_entries, @project) %>
       <br />
       <h3><%= l(:label_db_entry_plural) %></h3>
       <div class="info"><%= t(:messenger_db_intro) %></div><br />
@@ -51,7 +51,7 @@
       <%= render partial: 'messenger_settings/messenger_select', locals: { f: f, mf: :post_db_updates } %>
       <% end %>
 
-      <% if RedmineMessenger::REDMINE_CONTACTS_SUPPORT %>
+      <% if RedmineMessenger::REDMINE_CONTACTS_SUPPORT && User.current.allowed_to?(:view_contacts, @project) %>
       <br />
       <h3><%= l(:label_contact_plural) %></h3>
       <div class="info"><%= t(:messenger_contacts_intro) %></div><br />
@@ -59,7 +59,7 @@
       <%= render partial: 'messenger_settings/messenger_select', locals: { f: f, mf: :post_contact_updates } %>
       <% end %>
 
-      <% if RedmineMessenger::REDMINE_PASSWORDS_SUPPORT %>
+      <% if Redmine::Plugin.installed?('redmine_passwords') && User.current.allowed_to?(:view_passwords, @project) %>
       <br />
       <h3><%= l(:label_settings_post_password) %></h3>
       <div class="info"><%= t(:messenger_passwords_intro) %></div><br />
