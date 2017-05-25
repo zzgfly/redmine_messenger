@@ -4,9 +4,8 @@ require 'net/http'
 class Messenger
   include Redmine::I18n
 
-  def self.speak(msg, channels, attachment = nil, url = nil)
+  def self.speak(msg, channels, url, options)
     url = RedmineMessenger.settings[:messenger_url] unless url
-    icon = RedmineMessenger.settings[:messenger_icon]
 
     return if url.blank?
     return if channels.blank?
@@ -16,11 +15,11 @@ class Messenger
       link_names: 1
     }
 
-    if RedmineMessenger.settings[:messenger_username].present?
-      params[:username] = RedmineMessenger.settings[:messenger_username]
-    end
-    params[:attachments] = [attachment] if attachment && attachment.any?
+    username = Messenger.textfield_for_project(options[:project], :messenger_username)
+    params[:username] = username if username.present?
+    params[:attachments] = [options[:attachment]] if options[:attachment] && options[:attachment].any?
 
+    icon = Messenger.textfield_for_project(options[:project], :messenger_icon)
     if icon.present?
       if icon.start_with? ':'
         params[:icon_emoji] = icon
@@ -77,6 +76,24 @@ class Messenger
     nil
   end
 
+  def self.textfield_for_project(proj, config)
+    return if proj.blank?
+    # project based
+    pm = MessengerSetting.find_by(project_id: proj.id)
+    return pm.send(config) if !pm.nil? && pm.send(config).present?
+    default_textfield(proj, config)
+  end
+
+  def self.default_textfield(proj, config)
+    # parent project based
+    parent_field = textfield_for_project(proj.parent, config)
+    return parent_field if parent_field.present?
+    if RedmineMessenger.settings[config].present?
+      return RedmineMessenger.settings[config]
+    end
+    ''
+  end
+
   def self.channels_for_project(proj)
     return [] if proj.blank?
     # project based
@@ -85,6 +102,10 @@ class Messenger
       return [] if pm.messenger_channel == '-'
       return pm.messenger_channel.split(',').map(&:strip).uniq
     end
+    default_project_channels(proj)
+  end
+
+  def self.default_project_channels(proj)
     # parent project based
     parent_channel = channels_for_project(proj.parent)
     return parent_channel if parent_channel.present?
@@ -107,12 +128,7 @@ class Messenger
       return true if pm.send(config) == 2
       # 0 = use system based settings
     end
-    # parent project based
-    parent_setting = setting_for_project(proj.parent, config)
-    return parent_setting if @setting_found == 1
-    # system based
-    return true if RedmineMessenger.settings[config].present? && RedmineMessenger.settings[config] == '1'
-    false
+    default_project_setting(proj, config)
   end
 
   def self.default_project_setting(proj, config)

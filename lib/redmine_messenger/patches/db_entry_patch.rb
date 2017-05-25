@@ -24,7 +24,7 @@ module RedmineMessenger
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url self}|#{name}>",
                             user: User.current),
-                          channels, nil, url)
+                          channels, url, project: project)
         end
 
         def send_messenger_update
@@ -39,7 +39,7 @@ module RedmineMessenger
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url self}|#{name}>",
                             user: User.current),
-                          channels, nil, url)
+                          channels, url, project: project)
         end
       end
     end

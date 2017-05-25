@@ -51,7 +51,7 @@ module RedmineMessenger
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url(self)}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions description if RedmineMessenger.settings[:auto_mentions] == '1'}",
                             user: author),
-                          channels, attachment, url)
+                          channels, url, attachment: attachment, project: project)
         end
 
         def send_messenger_update
@@ -77,7 +77,7 @@ module RedmineMessenger
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
                             url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions(current_journal.notes) if Messenger.setting_for_project(project, :auto_mentions)}",
                             user: current_journal.user),
-                          channels, attachment, url)
+                          channels, url, attachment: attachment, project: project)
         end
       end
     end

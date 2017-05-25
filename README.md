@@ -63,8 +63,7 @@ Under the configuration options, set the Messenger API URL to the URL for an
 Incoming WebHook integration in your Messenger account and also set the Messenger
 Channel to the channel's handle (be careful, this is not the channel's display name
 visible to users, you can find each channel's handle by navigating inside the channel
-and clicking the down-arrow and selecting view info). See also the next two sections
-for advanced and custom routing options.
+and clicking the down-arrow and selecting view info).
 
 
 ## Uninstall

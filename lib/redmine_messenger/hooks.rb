@@ -48,7 +48,7 @@ module RedmineMessenger
       attachment[:text] = ll(Setting.default_language, :text_status_changed_by_changeset, "<#{revision_url}|#{ERB::Util.html_escape(changeset.comments)}>")
       attachment[:fields] = journal.details.map { |d| Messenger.detail_to_field d }
 
-      Messenger.speak msg, channels, attachment, url
+      Messenger.speak(msg, channels, url, attachment: attachment, project: project)
     end
   end
 end
