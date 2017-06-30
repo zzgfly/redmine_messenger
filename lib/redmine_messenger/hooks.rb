@@ -11,7 +11,7 @@ module RedmineMessenger
       url = Messenger.url_for_project issue.project
 
       return unless channels.present? && url && issue.save
-      return if issue.is_private? && !Messenger.setting_for_project(project, :post_private_issues)
+      return if issue.is_private? && !Messenger.setting_for_project(issue.project, :post_private_issues)
 
       msg = "[#{ERB::Util.html_escape(issue.project)}] #{ERB::Util.html_escape(journal.user.to_s)} updated <#{Messenger.object_url issue}|#{ERB::Util.html_escape(issue)}>"
 
@@ -48,7 +48,7 @@ module RedmineMessenger
       attachment[:text] = ll(Setting.default_language, :text_status_changed_by_changeset, "<#{revision_url}|#{ERB::Util.html_escape(changeset.comments)}>")
       attachment[:fields] = journal.details.map { |d| Messenger.detail_to_field d }
 
-      Messenger.speak(msg, channels, url, attachment: attachment, project: project)
+      Messenger.speak(msg, channels, url, attachment: attachment, project: repository.project)
     end
   end
 end
