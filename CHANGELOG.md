@@ -1,7 +1,13 @@
 Changelog
 =========
 
-##  0.9.9
+## 1.0.0
+
+* Redmine 3.4.x compatibility
+* Commit message issue bug fix
+* Some code cleanups
+
+## 0.9.9
 
 * All global messenger settings can be overwritten project based
 * Locale support added
