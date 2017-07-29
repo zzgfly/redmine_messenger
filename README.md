@@ -56,7 +56,7 @@ Install ``redmine_messenger`` plugin for `Redmine`
 
     cd $REDMINE_ROOT
     git clone git://github.com/alphanodes/redmine_messenger.git plugins/redmine_messenger
-    bundle exec rake db:migrate_plugins
+    bundle exec rake db:migrate_plugins RAILS_ENV=production
 
 Restart Redmine (application server) and you should see the plugin show up in the Plugins page.
 Under the configuration options, set the Messenger API URL to the URL for an
@@ -71,7 +71,7 @@ and clicking the down-arrow and selecting view info).
 Uninstall ``redmine_messenger``
 
     cd $REDMINE_ROOT
-    bundle exec rake db:migrate_plugins NAME=redmine_messenger VERSION=0
+    bundle exec rake db:migrate_plugins NAME=redmine_messenger VERSION=0 RAILS_ENV=production
     rm -rf plugins/redmine_messenger
 
 Restart Redmine (application server)
