@@ -47,3 +47,4 @@ en:
   messenger_url_info_html: 'Generate an <a target="_blank" href="https://github.com/AlphaNodes/redmine_messenger#prepare-your-messenger-service">Incoming WebHook</a> URL from the messenger service. Leave it empty, if you only want to activate specific projects with project based settings'
   messenger_verify_ssl_info_html: 'If your Messenger service uses an invalid or self-signed SSL certificate, disable it.'
   messenger_wiki_intro: Activate the changes for Wikis that should be sent to the pre-defined Messenger channel.
+  label_messenger_setting: Messenger Settings
