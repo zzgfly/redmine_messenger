@@ -3,7 +3,7 @@
 class CreateMessengerSettings < ActiveRecord::Migration
   def change
     create_table :messenger_settings do |t|
-      t.belongs_to :project, null: false, index: true
+      t.references :project, null: false, index: true
       t.string :messenger_url
       t.string :messenger_icon
       t.string :messenger_channel
