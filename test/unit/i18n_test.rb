@@ -25,7 +25,7 @@ module Redmine
                                              'config',
                                              'locales',
                                              '*.yml')].size
-      assert_equal lang_files_count, 2
+      assert_equal lang_files_count, 3
       valid_languages.each do |lang|
         assert set_language_if_valid(lang)
       end
@@ -34,7 +34,8 @@ module Redmine
       assert_equal 'Messenger Benutzer', l(:label_settings_messenger_username)
       ::I18n.locale = 'en'
       assert_equal 'Messenger username', l(:label_settings_messenger_username)
-
+      ::I18n.locale = 'ja'
+      assert_equal 'メッセンジャーのユーザー名', l(:label_settings_messenger_username)
       set_language_if_valid('en')
     end
   end
