@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.0.1 - not bumped and tagged yet
+
+* Japanese translation has been added - thanks @Yoto
+
 ## 1.0.0
 
 * Redmine 3.4.x compatibility
