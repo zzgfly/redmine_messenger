@@ -224,7 +224,7 @@ class Messenger
     Messenger.textfield_for_project(project, :default_mentions)
              .split(',').each { |m| names.push m.strip }
     names += extract_usernames(text) unless text.nil?
-    names.present? ? '\nTo: ' + names.join(', ') : nil
+    names.present? ? ' To: ' + names.uniq.join(', ') : nil
   end
 
   def self.extract_usernames(text)
