@@ -18,7 +18,7 @@ en:
   label_messenger_wiki_updated: "[%{project_url}] Wiki %{url} updated by *%{user}*"
   label_messenger: Messenger
   label_settings_auto_mentions: Convert names to mentions?
-  label_settings_default_mentions: Default people to notify, comma separated (e.g. @all, @here)
+  label_settings_default_mentions: Default people for mentions
   label_settings_display_watchers: Display watchers?
   label_settings_messenger_channel: Messenger Channel
   label_settings_messenger_icon: Messenger Icon
@@ -49,3 +49,4 @@ en:
   messenger_verify_ssl_info_html: 'If your Messenger service uses an invalid or self-signed SSL certificate, disable it.'
   messenger_wiki_intro: Activate the changes for Wikis that should be sent to the pre-defined Messenger channel.
   label_messenger_setting: Messenger Settings
+  default_mentionsl_info: Default people to notify, comma separated (e.g. @all, @here)

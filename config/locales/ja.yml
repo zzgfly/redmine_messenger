@@ -18,6 +18,7 @@ ja:
   label_messenger_wiki_updated: "[%{project_url}] Wiki %{url} が *%{user}* によって更新されました。"
   label_messenger: メッセンジャー
   label_settings_auto_mentions: ユーザー名をその人についての投稿(@ユーザー名)に変換する
+  label_settings_default_mentions: Default people for mentions
   label_settings_display_watchers: ウォッチャーを表示する
   label_settings_messenger_channel: メッセンジャーのチャンネル
   label_settings_messenger_icon: メッセンジャーのアイコン
@@ -48,3 +49,4 @@ ja:
   messenger_verify_ssl_info_html: 'メッセンジャー サービスが自己署名証明書や不正な証明書を使っている場合、無効として下さい。'
   messenger_wiki_intro: メッセンジャーに送信するWikiのイベントにチェックを入れて下さい。
   label_messenger_setting: メッセンジャーの設定
+  default_mentionsl_info: Default people to notify, comma separated (e.g. @all, @here)

@@ -4,6 +4,7 @@ Changelog
 ## 1.0.1 - not bumped and tagged yet
 
 * Japanese translation has been added - thanks @Yoto
+* Default mentions has been added - thanks @xstasi
 
 ## 1.0.0
 

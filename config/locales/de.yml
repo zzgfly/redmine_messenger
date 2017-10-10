@@ -18,6 +18,7 @@ de:
   label_messenger_wiki_updated: "[%{project_url}] Wiki %{url} aktualisiert von *%{user}*"
   label_messenger: Messenger
   label_settings_auto_mentions: Namen für Mentions konvertiert?
+  label_settings_default_mentions: Standardbenutzer für Mentions
   label_settings_display_watchers: Beobachter?
   label_settings_messenger_channel: Messenger Channel
   label_settings_messenger_icon: Messenger Icon
@@ -48,3 +49,4 @@ de:
   messenger_verify_ssl_info_html: 'Falls der Messenger Service ein ungültiges oder selbst erstelltes (self-signed) SSL Zertifikat verwendet bitte deaktivieren.'
   messenger_wiki_intro: Legen Sie fest welche Einträge oder Änderungen für Wikis im angegebenen Messenger Channel versendet werden.
   label_messenger_setting: Messenger Einstellung
+  default_mentionsl_info: Benutzer, die immer mit Mentions benachrichtet werden sollen. Mehrere Namen können mit Komma getrennt angegeben werden (z.B. @all, @here).
