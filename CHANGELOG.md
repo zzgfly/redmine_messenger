@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 1.0.1 - not bumped and tagged yet
+## 1.0.1
 
 * Japanese translation has been added - thanks @Yoto
 * Default mentions has been added - thanks @xstasi

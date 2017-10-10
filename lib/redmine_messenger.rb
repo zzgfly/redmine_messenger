@@ -10,6 +10,10 @@ Rails.configuration.to_prepare do
     def self.settings
       ActionController::Parameters.new(Setting[:plugin_redmine_messenger])
     end
+
+    def setting?(value)
+      return true if settings[value].to_i == 1
+    end
   end
 
   # Patches

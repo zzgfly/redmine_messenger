@@ -5,7 +5,7 @@ class Messenger
   include Redmine::I18n
 
   def self.speak(msg, channels, url, options)
-    url = RedmineMessenger.settings[:messenger_url] unless url
+    url ||= RedmineMessenger.settings[:messenger_url]
 
     return if url.blank?
     return if channels.blank?
@@ -32,7 +32,7 @@ class Messenger
       uri = URI(url)
       params[:channel] = channel
       http_options = { use_ssl: uri.scheme == 'https' }
-      if RedmineMessenger.settings[:messenger_verify_ssl] != 1
+      unless RedmineMessenger.setting?(:messenger_verify_ssl)
         http_options[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
       end
 
@@ -137,7 +137,7 @@ class Messenger
       return parent_setting if @setting_found == 1
     end
     # system based
-    return true if RedmineMessenger.settings[config].present? && RedmineMessenger.settings[config] == '1'
+    return true if RedmineMessenger.settings[config].present? && RedmineMessenger.setting?(config)
     false
   end
 
