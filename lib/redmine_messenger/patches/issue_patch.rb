@@ -49,7 +49,7 @@ module RedmineMessenger
 
           Messenger.speak(l(:label_messenger_issue_created,
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
-                            url: "<#{Messenger.object_url(self)}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions description if RedmineMessenger.settings[:auto_mentions] == '1'}",
+                            url: "<#{Messenger.object_url(self)}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions(project, description) if Messenger.setting_for_project(project, :auto_mentions) or not Messenger.textfield_for_project(project, :default_mentions).empty? }",
                             user: author),
                           channels, url, attachment: attachment, project: project)
         end
@@ -75,7 +75,7 @@ module RedmineMessenger
 
           Messenger.speak(l(:label_messenger_issue_updated,
                             project_url: "<#{Messenger.object_url project}|#{ERB::Util.html_escape(project)}>",
-                            url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions(current_journal.notes) if Messenger.setting_for_project(project, :auto_mentions)}",
+                            url: "<#{Messenger.object_url self}|#{ERB::Util.html_escape(self)}>#{Messenger.mentions(project, current_journal.notes) if Messenger.setting_for_project(project, :auto_mentions) or not Messenger.textfield_for_project(project, :default_mentions).empty? }",
                             user: current_journal.user),
                           channels, url, attachment: attachment, project: project)
         end

@@ -41,6 +41,11 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:label_settings_default_mentions)) %>
+  <%= text_field_tag('settings[default_mentions]', @settings[:default_mentions], size: 30) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:label_settings_display_watchers)) %>
   <%= check_box_tag 'settings[display_watchers]', 1, @settings[:display_watchers].to_i == 1 %>
 </p>

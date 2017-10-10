@@ -219,9 +219,12 @@ class Messenger
     result
   end
 
-  def self.mentions(text)
-    return nil if text.nil?
-    names = extract_usernames(text)
+  def self.mentions(project, text)
+    names = []
+    Messenger.textfield_for_project(project, :default_mentions).split(',').each { |m|
+      names.push m.strip
+    }
+    names += extract_usernames(text) unless text.nil?
     names.present? ? '\nTo: ' + names.join(', ') : nil
   end
 

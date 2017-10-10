@@ -18,6 +18,7 @@ en:
   label_messenger_wiki_updated: "[%{project_url}] Wiki %{url} updated by *%{user}*"
   label_messenger: Messenger
   label_settings_auto_mentions: Convert names to mentions?
+  label_settings_default_mentions: Default people to notify, comma separated (e.g. @all, @here)
   label_settings_display_watchers: Display watchers?
   label_settings_messenger_channel: Messenger Channel
   label_settings_messenger_icon: Messenger Icon

@@ -8,6 +8,7 @@ class CreateMessengerSettings < ActiveRecord::Migration
       t.string :messenger_icon
       t.string :messenger_channel
       t.string :messenger_username
+      t.string :default_mentions
       t.integer :messenger_verify_ssl, default: 0, null: false
       t.integer :auto_mentions, default: 0, null: false
       t.integer :display_watchers, default: 0, null: false
