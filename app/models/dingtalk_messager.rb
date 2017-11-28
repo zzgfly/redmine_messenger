@@ -17,14 +17,14 @@ class DingTalkMessenger
 
         
         params = {
-            "msgtype": "markdown",
-            "at": {
-              "atMobiles": ["18600369206"],
-              "isAtAll": false
+            :msgtype=>"markdown",
+            :at=> {
+              :atMobiles=>["18600369206"],
+              :isAtAll=>false
             },
-            "markdown": {
-              "title": "##{issue.id} Assigned to: #{ERB::Util.html_escape(issue.assigned_to.to_s)}",
-              "text": "# ##{issue.id} #{ERB::Util.html_escape(issue.title)}\n- Project: **#{ERB::Util.html_escape(issue.project)}**\n- Author: **#{ERB::Util.html_escape(issue.author)}**\n- Assigned to: **#{ERB::Util.html_escape(issue.assigned_to.to_s)}**\n- Status: **#{ERB::Util.html_escape(issue.status.to_s)}**\n# [查看详情](http://oa.188yd.com:3000/issues/#{issue.id})\n@18600369206"
+            :markdown=>{
+              :title=>"##{issue.id} Assigned to: #{ERB::Util.html_escape(issue.assigned_to.to_s)}",
+              :text=>"# ##{issue.id} #{ERB::Util.html_escape(issue.title)}\n- Project: **#{ERB::Util.html_escape(issue.project)}**\n- Author: **#{ERB::Util.html_escape(issue.author)}**\n- Assigned to: **#{ERB::Util.html_escape(issue.assigned_to.to_s)}**\n- Status: **#{ERB::Util.html_escape(issue.status.to_s)}**\n# [查看详情](http://oa.188yd.com:3000/issues/#{issue.id})\n@18600369206"
             }
           }
 
@@ -52,6 +52,7 @@ class DingTalkMessenger
         begin
             req = Net::HTTP::Post.new(uri,{'Content-Type' => 'application/json'})
             payload = params.to_json
+            puts "payload:"
             puts payload
             # req.set_form_data(payload: payload)
             req.body = payload
