@@ -4,7 +4,7 @@ require 'redmine'
 require 'redmine_messenger'
 
 Redmine::Plugin.register :redmine_messenger do
-  name 'Redmine Messenger'
+  name 'Redmine Messenger for dingtalk'
   author 'AlphaNodes GmbH'
   url 'https://github.com/alphanodes/redmine_messenger'
   author_url 'https://alphanodes.com/'
